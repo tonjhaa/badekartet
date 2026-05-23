@@ -86,10 +86,19 @@ body {
   margin-left: -32px;
   margin-top: 0;
   margin-bottom: 0;
+  overflow: visible;
 }
-.game-header img.header-bg { width: 100%; height: auto; display: block; }
+.header-img-clip {
+  overflow: hidden;
+  height: 145px;
+}
+.game-header img.header-bg {
+  width: 100%; height: 145px;
+  object-fit: cover; object-position: center 15%;
+  display: block;
+}
 .header-chars {
-  position: absolute; top: 18px; left: 0; right: 0;
+  position: absolute; top: 12px; left: 0; right: 0;
   display: flex; justify-content: center; gap: 0;
   align-items: flex-start; pointer-events: none;
 }
@@ -106,7 +115,7 @@ body {
   0%, 100% { transform: translateY(0) rotate(-3deg); }
   50% { transform: translateY(-14px) rotate(3deg); }
 }
-.hc-img { width: 109px; height: auto; display: block; mix-blend-mode: multiply; }
+.hc-img { width: 120px; height: auto; display: block; mix-blend-mode: multiply; }
 .nina-img { transform: scaleX(-1); }
 
 /* ---- PROGRESS CARD ---- */
