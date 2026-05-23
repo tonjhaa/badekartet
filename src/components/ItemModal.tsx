@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import type { Task, ShopItem, Assignee } from '../types';
 
 type ModalMode =
-  | { kind: 'task'; item: Task | null; onSave: (t: Omit<Task, 'id' | 'done' | 'createdAt'>) => void; onDelete?: () => void }
-  | { kind: 'shop'; item: ShopItem | null; onSave: (s: Omit<ShopItem, 'id' | 'bought' | 'createdAt'>) => void; onDelete?: () => void };
+  | { kind: 'task'; item: Task | null; onSave: (t: Omit<Task, 'id' | 'done' | 'created_at'>) => void; onDelete?: () => void }
+  | { kind: 'shop'; item: ShopItem | null; onSave: (s: Omit<ShopItem, 'id' | 'bought' | 'created_at'>) => void; onDelete?: () => void };
 
 interface Props {
   mode: ModalMode;

@@ -1,66 +1,132 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './index.css';
-import { useLocalStorage } from './hooks/useLocalStorage';
+import { supabase } from './lib/supabase';
 import type { Task, ShopItem, MapItem } from './types';
 import MapPage from './components/MapPage';
 import TasksPage from './components/TasksPage';
 
-const DEFAULT_TASKS: Task[] = [
-  { id: '1', name: 'Ringe Glenn', assignee: 'Stig', deadline: 'Uke 22', done: true, createdAt: 1 },
-  { id: '2', name: 'Handle benkeplate', assignee: 'Begge', deadline: 'Uke 22', done: false, createdAt: 2 },
-  { id: '3', name: 'Avtale henting av benkeplate', assignee: 'Begge', deadline: 'Lørdag 30.05', done: false, createdAt: 3 },
-  { id: '4', name: 'Ordne og vaske vaskerom', assignee: 'Begge', deadline: 'Uke 23', done: false, createdAt: 4 },
-  { id: '5', name: 'Ringe rørlegger Rune', assignee: 'Stig', deadline: 'Uke 23', done: false, createdAt: 5 },
-  { id: '6', name: 'Riving av bad', assignee: 'Begge', deadline: '5.–7. juni', done: false, createdAt: 6 },
+const DEFAULT_TASKS: Omit<Task, 'id'>[] = [
+  { name: 'Ringe Glenn', assignee: 'Stig', deadline: 'Uke 22', done: true, created_at: 1 },
+  { name: 'Handle benkeplate', assignee: 'Begge', deadline: 'Uke 22', done: false, created_at: 2 },
+  { name: 'Avtale henting av benkeplate', assignee: 'Begge', deadline: 'Lørdag 30.05', done: false, created_at: 3 },
+  { name: 'Ordne og vaske vaskerom', assignee: 'Begge', deadline: 'Uke 23', done: false, created_at: 4 },
+  { name: 'Ringe rørlegger Rune', assignee: 'Stig', deadline: 'Uke 23', done: false, created_at: 5 },
+  { name: 'Riving av bad', assignee: 'Begge', deadline: '5.–7. juni', done: false, created_at: 6 },
 ];
 
-const DEFAULT_SHOP: ShopItem[] = [
-  { id: 's1', name: 'Benkeplate', assignee: 'Begge', bought: true, createdAt: 7 },
-  { id: 's2', name: 'Speil × 2', assignee: 'Nina', bought: false, createdAt: 8 },
-  { id: 's3', name: 'Dusjkabinett', assignee: 'Stig', bought: false, createdAt: 9 },
-  { id: 's4', name: 'Do', assignee: 'Begge', bought: false, createdAt: 10 },
-  { id: 's5', name: 'Spilevegg', assignee: 'Stig', bought: false, createdAt: 11 },
-  { id: 's6', name: 'Maling', assignee: 'Nina', bought: false, createdAt: 12 },
-  { id: 's7', name: 'Fugemasse', assignee: 'Stig', bought: false, createdAt: 13 },
-  { id: 's8', name: 'Lister', assignee: 'Begge', bought: false, createdAt: 14 },
+const DEFAULT_SHOP: Omit<ShopItem, 'id'>[] = [
+  { name: 'Benkeplate', assignee: 'Begge', bought: true, created_at: 7 },
+  { name: 'Speil × 2', assignee: 'Nina', bought: false, created_at: 8 },
+  { name: 'Dusjkabinett', assignee: 'Stig', bought: false, created_at: 9 },
+  { name: 'Do', assignee: 'Begge', bought: false, created_at: 10 },
+  { name: 'Spilevegg', assignee: 'Stig', bought: false, created_at: 11 },
+  { name: 'Maling', assignee: 'Nina', bought: false, created_at: 12 },
+  { name: 'Fugemasse', assignee: 'Stig', bought: false, created_at: 13 },
+  { name: 'Lister', assignee: 'Begge', bought: false, created_at: 14 },
 ];
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 
+async function loadTasks() {
+  const { data } = await supabase.from('tasks').select('*').order('created_at');
+  return (data ?? []) as Task[];
+}
+
+async function loadShop() {
+  const { data } = await supabase.from('shop_items').select('*').order('created_at');
+  return (data ?? []) as ShopItem[];
+}
+
 export default function App() {
   const [page, setPage] = useState<'map' | 'tasks'>('map');
-  const [tasks, setTasks] = useLocalStorage<Task[]>('bdk-tasks', DEFAULT_TASKS);
-  const [shopItems, setShopItems] = useLocalStorage<ShopItem[]>('bdk-shop', DEFAULT_SHOP);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [shopItems, setShopItems] = useState<ShopItem[]>([]);
+  const [ready, setReady] = useState(false);
 
-  // Combined map items ordered by createdAt
+  useEffect(() => {
+    async function init() {
+      const [t, s] = await Promise.all([loadTasks(), loadShop()]);
+
+      // Seed defaults if DB is empty
+      if (t.length === 0 && s.length === 0) {
+        const taskRows = DEFAULT_TASKS.map(d => ({ id: uid(), ...d }));
+        const shopRows = DEFAULT_SHOP.map(d => ({ id: uid(), ...d }));
+        await Promise.all([
+          supabase.from('tasks').insert(taskRows),
+          supabase.from('shop_items').insert(shopRows),
+        ]);
+        setTasks(taskRows);
+        setShopItems(shopRows);
+      } else {
+        setTasks(t);
+        setShopItems(s);
+      }
+      setReady(true);
+    }
+    init();
+
+    // Real-time subscriptions
+    const ch = supabase
+      .channel('badekartet')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
+        loadTasks().then(setTasks);
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'shop_items' }, () => {
+        loadShop().then(setShopItems);
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(ch); };
+  }, []);
+
+  // Combined map items
   const allItems: MapItem[] = [
-    ...tasks.map(t => ({ id: t.id, name: t.name, done: t.done, kind: 'task' as const, createdAt: t.createdAt })),
-    ...shopItems.map(s => ({ id: s.id, name: s.name, done: s.bought, kind: 'shop' as const, createdAt: s.createdAt })),
-  ].sort((a, b) => a.createdAt - b.createdAt);
+    ...tasks.map(t => ({ id: t.id, name: t.name, done: t.done, kind: 'task' as const, created_at: t.created_at })),
+    ...shopItems.map(s => ({ id: s.id, name: s.name, done: s.bought, kind: 'shop' as const, created_at: s.created_at })),
+  ].sort((a, b) => a.created_at - b.created_at);
 
   const completedCount = allItems.filter(i => i.done).length;
 
   // Task CRUD
-  function handleTaskSave(id: string | null, data: Omit<Task, 'id' | 'done' | 'createdAt'>) {
+  async function handleTaskSave(id: string | null, data: Omit<Task, 'id' | 'done' | 'created_at'>) {
     if (id) {
-      setTasks(prev => prev.map(t => t.id === id ? { ...t, ...data } : t));
+      await supabase.from('tasks').update(data).eq('id', id);
     } else {
-      setTasks(prev => [...prev, { id: uid(), done: false, createdAt: Date.now(), ...data }]);
+      await supabase.from('tasks').insert({ id: uid(), done: false, created_at: Date.now(), ...data });
     }
   }
-  function handleTaskDelete(id: string) { setTasks(prev => prev.filter(t => t.id !== id)); }
-  function handleTaskToggle(id: string) { setTasks(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t)); }
+  async function handleTaskDelete(id: string) {
+    await supabase.from('tasks').delete().eq('id', id);
+  }
+  async function handleTaskToggle(id: string) {
+    const t = tasks.find(t => t.id === id);
+    if (t) await supabase.from('tasks').update({ done: !t.done }).eq('id', id);
+  }
 
   // Shop CRUD
-  function handleShopSave(id: string | null, data: Omit<ShopItem, 'id' | 'bought' | 'createdAt'>) {
+  async function handleShopSave(id: string | null, data: Omit<ShopItem, 'id' | 'bought' | 'created_at'>) {
     if (id) {
-      setShopItems(prev => prev.map(s => s.id === id ? { ...s, ...data } : s));
+      await supabase.from('shop_items').update(data).eq('id', id);
     } else {
-      setShopItems(prev => [...prev, { id: uid(), bought: false, createdAt: Date.now(), ...data }]);
+      await supabase.from('shop_items').insert({ id: uid(), bought: false, created_at: Date.now(), ...data });
     }
   }
-  function handleShopDelete(id: string) { setShopItems(prev => prev.filter(s => s.id !== id)); }
-  function handleShopToggle(id: string) { setShopItems(prev => prev.map(s => s.id === id ? { ...s, bought: !s.bought } : s)); }
+  async function handleShopDelete(id: string) {
+    await supabase.from('shop_items').delete().eq('id', id);
+  }
+  async function handleShopToggle(id: string) {
+    const s = shopItems.find(s => s.id === id);
+    if (s) await supabase.from('shop_items').update({ bought: !s.bought }).eq('id', id);
+  }
+
+  if (!ready) return (
+    <>
+      <div className="sky-bg" />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', fontFamily: "'Baloo 2', cursive", fontSize: 22, color: '#1A3A5C', fontWeight: 800 }}>
+        Laster Badekartet...
+      </div>
+    </>
+  );
 
   return (
     <>
@@ -69,7 +135,6 @@ export default function App() {
       <div className="sun" /><div className="grass" />
 
       <div className="wrap">
-        {/* Header */}
         <div className="game-header">
           <img className="header-bg" src="/header.png" alt="Badekartet" />
           <div className="header-chars">
@@ -86,7 +151,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Nav */}
         <nav className="nav">
           <button className={`nav-btn${page === 'map' ? ' active' : ''}`} onClick={() => setPage('map')}>Kartet</button>
           <button className={`nav-btn${page === 'tasks' ? ' active' : ''}`} onClick={() => setPage('tasks')}>Gjøremål</button>

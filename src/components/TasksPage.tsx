@@ -10,10 +10,10 @@ type Modal =
 interface Props {
   tasks: Task[];
   shopItems: ShopItem[];
-  onTaskSave: (id: string | null, data: Omit<Task, 'id' | 'done' | 'createdAt'>) => void;
+  onTaskSave: (id: string | null, data: Omit<Task, 'id' | 'done' | 'created_at'>) => void;
   onTaskDelete: (id: string) => void;
   onTaskToggle: (id: string) => void;
-  onShopSave: (id: string | null, data: Omit<ShopItem, 'id' | 'bought' | 'createdAt'>) => void;
+  onShopSave: (id: string | null, data: Omit<ShopItem, 'id' | 'bought' | 'created_at'>) => void;
   onShopDelete: (id: string) => void;
   onShopToggle: (id: string) => void;
 }

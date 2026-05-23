@@ -6,7 +6,7 @@ export interface Task {
   assignee: Assignee;
   deadline: string;
   done: boolean;
-  createdAt: number;
+  created_at: number;
 }
 
 export interface ShopItem {
@@ -14,7 +14,7 @@ export interface ShopItem {
   name: string;
   assignee: Assignee;
   bought: boolean;
-  createdAt: number;
+  created_at: number;
 }
 
 export type MapItem = {
@@ -22,4 +22,5 @@ export type MapItem = {
   name: string;
   done: boolean;
   kind: 'task' | 'shop';
+  created_at: number;
 };
