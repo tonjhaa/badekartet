@@ -148,10 +148,10 @@ export default function DynamicMap({ items, completedCount }: Props) {
         return (
           <>
             <g className="map-stig" filter="url(#csh)">
-              <image href="/stig.png" x={x + 10} y={y - 114} width="86" height="106" style={{ mixBlendMode: 'multiply' }} />
+              <image href={`${import.meta.env.BASE_URL}stig.png`} x={x + 10} y={y - 114} width="86" height="106" style={{ mixBlendMode: 'multiply' }} />
             </g>
             <g className="map-nina" filter="url(#csh)">
-              <image href="/nina.png" x={x - 96} y={y - 108} width="80" height="99"
+              <image href={`${import.meta.env.BASE_URL}nina.png`} x={x - 96} y={y - 108} width="80" height="99"
                 transform={`translate(${(x - 96) * 2 + 80}, 0) scale(-1, 1)`}
                 style={{ mixBlendMode: 'multiply' }} />
             </g>

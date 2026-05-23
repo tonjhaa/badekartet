@@ -136,16 +136,16 @@ export default function App() {
 
       <div className="wrap">
         <div className="game-header">
-          <img className="header-bg" src="/header.png" alt="Badekartet" />
+          <img className="header-bg" src={`${import.meta.env.BASE_URL}header.png`} alt="Badekartet" />
           <div className="header-chars">
             <div className="hc">
               <div className="hc-figure">
-                <img className="hc-img nina-img" src="/nina.png" alt="Nina" />
+                <img className="hc-img nina-img" src={`${import.meta.env.BASE_URL}nina.png`} alt="Nina" />
               </div>
             </div>
             <div className="hc">
               <div className="hc-figure">
-                <img className="hc-img" src="/stig.png" alt="Stig" />
+                <img className="hc-img" src={`${import.meta.env.BASE_URL}stig.png`} alt="Stig" />
               </div>
             </div>
           </div>
