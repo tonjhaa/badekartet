@@ -1,9 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import './index.css';
 import { supabase } from './lib/supabase';
-import type { Task, ShopItem, MapItem } from './types';
+import type { Task, ShopItem, MapItem, Assignee } from './types';
 import MapPage from './components/MapPage';
 import TasksPage from './components/TasksPage';
+
+const PRAISE_BEGGE = [
+  'Supert samarbeid! 🎉',
+  'Teamwork makes the dream work! ✨',
+  'Heia begge to! 🌟',
+  'Et steg nærmere nytt bad! 🛁',
+  'Knallbra! 💪',
+];
+const PRAISE_PERSON = (name: string) => [
+  `Heia ${name}! 🌟`,
+  `${name} er best! ⭐`,
+  `Supert, ${name}! 🎉`,
+  `Knallbra, ${name}! 💪`,
+  `${name} leverer! 🏆`,
+  `Imponerende, ${name}! ✨`,
+];
+function randomPraise(assignee: Assignee): string {
+  const pool = assignee === 'Begge' ? PRAISE_BEGGE : PRAISE_PERSON(assignee);
+  return pool[Math.floor(Math.random() * pool.length)];
+}
 
 const DEFAULT_TASKS: Omit<Task, 'id'>[] = [
   { name: 'Ringe Glenn', assignee: 'Stig', deadline: 'Uke 22', done: true, created_at: 1 },
@@ -42,6 +63,20 @@ export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shopItems, setShopItems] = useState<ShopItem[]>([]);
   const [ready, setReady] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function celebrate(assignee: Assignee) {
+    confetti({
+      particleCount: 90,
+      spread: 70,
+      origin: { y: 0.55 },
+      colors: ['#0ABFBC', '#FFD93D', '#FF6B6B', '#90E06A', '#48CAE4'],
+    });
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast(randomPraise(assignee));
+    toastTimer.current = setTimeout(() => setToast(null), 2800);
+  }
 
   useEffect(() => {
     async function init() {
@@ -100,7 +135,11 @@ export default function App() {
   }
   async function handleTaskToggle(id: string) {
     const t = tasks.find(t => t.id === id);
-    if (t) await supabase.from('tasks').update({ done: !t.done }).eq('id', id);
+    if (t) {
+      const nowDone = !t.done;
+      await supabase.from('tasks').update({ done: nowDone }).eq('id', id);
+      if (nowDone) celebrate(t.assignee);
+    }
   }
 
   // Shop CRUD
@@ -116,7 +155,11 @@ export default function App() {
   }
   async function handleShopToggle(id: string) {
     const s = shopItems.find(s => s.id === id);
-    if (s) await supabase.from('shop_items').update({ bought: !s.bought }).eq('id', id);
+    if (s) {
+      const nowBought = !s.bought;
+      await supabase.from('shop_items').update({ bought: nowBought }).eq('id', id);
+      if (nowBought) celebrate(s.assignee);
+    }
   }
 
   if (!ready) return (
@@ -133,6 +176,12 @@ export default function App() {
       <div className="sky-bg" />
       <div className="cloud c1" /><div className="cloud c2" /><div className="cloud c3" />
       <div className="sun" /><div className="grass" />
+
+      {toast && (
+        <div className="praise-toast" key={toast + Date.now()}>
+          {toast}
+        </div>
+      )}
 
       <div className="wrap">
         <div className="game-header">
