@@ -2,6 +2,16 @@ import { useState } from 'react';
 import type { Task, ShopItem } from '../types';
 import ItemModal from './ItemModal';
 
+function formatDeadline(deadline: string): string {
+  if (!deadline) return '';
+  if (/^Uke\s*\d+$/i.test(deadline)) return deadline;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(deadline)) {
+    const d = new Date(deadline + 'T12:00:00');
+    return d.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
+  }
+  return deadline;
+}
+
 type Modal =
   | { kind: 'task'; item: Task | null }
   | { kind: 'shop'; item: ShopItem | null }
@@ -40,7 +50,7 @@ export default function TasksPage({ tasks, shopItems, onTaskSave, onTaskDelete, 
             <div className="task-meta">
               {t.assignee !== 'Begge' && <span>{t.assignee}</span>}
               {t.assignee === 'Begge' && <span>Nina og Stig</span>}
-              {t.deadline && <span>{t.deadline}</span>}
+              {t.deadline && <span>{formatDeadline(t.deadline)}</span>}
             </div>
           )}
           {t.assignee === 'Begge' && !t.deadline && (
@@ -68,7 +78,7 @@ export default function TasksPage({ tasks, shopItems, onTaskSave, onTaskDelete, 
           {(t.assignee || t.deadline) && (
             <div className="task-meta">
               <span>{t.assignee === 'Begge' ? 'Nina og Stig' : t.assignee}</span>
-              {t.deadline && <span>{t.deadline}</span>}
+              {t.deadline && <span>{formatDeadline(t.deadline)}</span>}
             </div>
           )}
           <div className="task-btns">

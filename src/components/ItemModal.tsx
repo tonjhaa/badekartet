@@ -10,25 +10,45 @@ interface Props {
   onClose: () => void;
 }
 
+type DeadlineMode = 'date' | 'week';
+
+function parseDeadline(deadline: string): { mode: DeadlineMode; date: string; week: string } {
+  const weekMatch = deadline.match(/^Uke\s*(\d+)$/i);
+  if (weekMatch) return { mode: 'week', date: '', week: weekMatch[1] };
+  if (/^\d{4}-\d{2}-\d{2}$/.test(deadline)) return { mode: 'date', date: deadline, week: '' };
+  return { mode: 'date', date: '', week: '' };
+}
+
 export default function ItemModal({ mode, onClose }: Props) {
   const [name, setName] = useState('');
   const [assignee, setAssignee] = useState<Assignee>('Begge');
-  const [deadline, setDeadline] = useState('');
+  const [deadlineMode, setDeadlineMode] = useState<DeadlineMode>('date');
+  const [deadlineDate, setDeadlineDate] = useState('');
+  const [deadlineWeek, setDeadlineWeek] = useState('');
 
   useEffect(() => {
     if (mode.kind === 'task' && mode.item) {
       setName(mode.item.name);
       setAssignee(mode.item.assignee);
-      setDeadline(mode.item.deadline);
+      const parsed = parseDeadline(mode.item.deadline);
+      setDeadlineMode(parsed.mode);
+      setDeadlineDate(parsed.date);
+      setDeadlineWeek(parsed.week);
     } else if (mode.kind === 'shop' && mode.item) {
       setName(mode.item.name);
       setAssignee(mode.item.assignee);
     } else {
-      setName(''); setAssignee('Begge'); setDeadline('');
+      setName(''); setAssignee('Begge');
+      setDeadlineMode('date'); setDeadlineDate(''); setDeadlineWeek('');
     }
   }, []);
 
-  const isEdit = mode.kind === 'task' ? !!mode.item : !!mode.item;
+  function getDeadlineValue(): string {
+    if (deadlineMode === 'week') return deadlineWeek ? `Uke ${deadlineWeek}` : '';
+    return deadlineDate;
+  }
+
+  const isEdit = !!mode.item;
   const title = mode.kind === 'task'
     ? (isEdit ? 'Endre gjøremål' : 'Nytt gjøremål')
     : (isEdit ? 'Endre handlelistevare' : 'Ny handlelistevare');
@@ -36,7 +56,7 @@ export default function ItemModal({ mode, onClose }: Props) {
   function save() {
     if (!name.trim()) return;
     if (mode.kind === 'task') {
-      mode.onSave({ name: name.trim(), assignee, deadline });
+      mode.onSave({ name: name.trim(), assignee, deadline: getDeadlineValue() });
     } else {
       mode.onSave({ name: name.trim(), assignee });
     }
@@ -79,12 +99,39 @@ export default function ItemModal({ mode, onClose }: Props) {
         {mode.kind === 'task' && (
           <div className="field">
             <label>Frist</label>
-            <input
-              type="text"
-              placeholder="f.eks. Uke 23 eller 5. juni"
-              value={deadline}
-              onChange={e => setDeadline(e.target.value)}
-            />
+            <div className="deadline-toggle">
+              <button
+                type="button"
+                className={`dl-tab${deadlineMode === 'date' ? ' active' : ''}`}
+                onClick={() => setDeadlineMode('date')}
+              >Dato</button>
+              <button
+                type="button"
+                className={`dl-tab${deadlineMode === 'week' ? ' active' : ''}`}
+                onClick={() => setDeadlineMode('week')}
+              >Uke</button>
+            </div>
+            {deadlineMode === 'date' ? (
+              <input
+                type="date"
+                value={deadlineDate}
+                onChange={e => setDeadlineDate(e.target.value)}
+                style={{ marginTop: 6 }}
+              />
+            ) : (
+              <div className="week-input-wrap" style={{ marginTop: 6 }}>
+                <span className="week-prefix">Uke</span>
+                <input
+                  type="number"
+                  min={1}
+                  max={53}
+                  placeholder="25"
+                  value={deadlineWeek}
+                  onChange={e => setDeadlineWeek(e.target.value)}
+                  className="week-input"
+                />
+              </div>
+            )}
           </div>
         )}
 
