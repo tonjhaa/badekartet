@@ -202,11 +202,11 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
         return (
           <>
             <g className="map-stig" filter="url(#csh)">
-              <image href={`${import.meta.env.BASE_URL}stig.png`} x={x + 40} y={y - 75} width="52" height="64" style={{ mixBlendMode: 'multiply' }} />
+              <image href={`${import.meta.env.BASE_URL}stig.png`} x={x + 20} y={y - 75} width="52" height="64" style={{ mixBlendMode: 'multiply' }} />
             </g>
             <g className="map-nina" filter="url(#csh)">
-              <image href={`${import.meta.env.BASE_URL}nina.png`} x={x - 88} y={y - 70} width="48" height="60"
-                transform={`translate(${(x - 88) * 2 + 48}, 0) scale(-1, 1)`}
+              <image href={`${import.meta.env.BASE_URL}nina.png`} x={x - 68} y={y - 70} width="48" height="60"
+                transform={`translate(${(x - 68) * 2 + 48}, 0) scale(-1, 1)`}
                 style={{ mixBlendMode: 'multiply' }} />
             </g>
           </>
