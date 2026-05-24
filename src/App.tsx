@@ -4,7 +4,6 @@ import './index.css';
 import { supabase } from './lib/supabase';
 import type { Task, ShopItem, MapItem, Assignee } from './types';
 import MapPage from './components/MapPage';
-import TasksPage from './components/TasksPage';
 
 const PROGRESS_PRAISE = [
   'Dere er ustoppelige! 🚀',
@@ -69,14 +68,12 @@ async function loadShop() {
 }
 
 export default function App() {
-  const [page, setPage] = useState<'map' | 'tasks'>('map');
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shopItems, setShopItems] = useState<ShopItem[]>([]);
   const [ready, setReady] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [walkAnim, setWalkAnim] = useState<{ from: number; to: number } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastMapCount = useRef(-1);
 
   function celebrateProgress() {
     confetti({ particleCount: 160, spread: 110, origin: { y: 0.5 }, colors: ['#0ABFBC', '#FFD93D', '#FF6B6B', '#90E06A', '#48CAE4'] });
@@ -86,21 +83,6 @@ export default function App() {
     if (toastTimer.current) clearTimeout(toastTimer.current);
     setToast(msg);
     toastTimer.current = setTimeout(() => setToast(null), 3500);
-  }
-
-  function handleSetPage(newPage: 'map' | 'tasks') {
-    if (newPage === 'map' && page === 'tasks') {
-      const prev = lastMapCount.current < 0 ? completedCount : lastMapCount.current;
-      const gained = completedCount - prev;
-      if (gained > 0 && !walkAnim) {
-        setWalkAnim({ from: prev, to: completedCount });
-      }
-      lastMapCount.current = completedCount;
-    } else if (newPage === 'tasks') {
-      lastMapCount.current = completedCount;
-      setWalkAnim(null);
-    }
-    setPage(newPage);
   }
 
   function handleWalkDone() {
@@ -181,7 +163,10 @@ export default function App() {
     if (t) {
       const nowDone = !t.done;
       await supabase.from('tasks').update({ done: nowDone }).eq('id', id);
-      if (nowDone) celebrate(t.assignee);
+      if (nowDone) {
+        celebrate(t.assignee);
+        if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
+      }
     }
   }
   async function handleTaskReorder(id: string, newOrder: number) {
@@ -205,7 +190,10 @@ export default function App() {
     if (s) {
       const nowBought = !s.bought;
       await supabase.from('shop_items').update({ bought: nowBought }).eq('id', id);
-      if (nowBought) celebrate(s.assignee);
+      if (nowBought) {
+        celebrate(s.assignee);
+        if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
+      }
     }
   }
   async function handleShopReorder(id: string, newOrder: number) {
@@ -252,26 +240,22 @@ export default function App() {
           </div>
         </div>
 
-        <nav className="nav">
-          <button className={`nav-btn${page === 'map' ? ' active' : ''}`} onClick={() => handleSetPage('map')}>Kartet</button>
-          <button className={`nav-btn${page === 'tasks' ? ' active' : ''}`} onClick={() => handleSetPage('tasks')}>Gjøremål</button>
-        </nav>
-
-        {page === 'map' && <MapPage items={allItems} completedCount={completedCount} walkAnim={walkAnim} onWalkDone={handleWalkDone} />}
-        {page === 'tasks' && (
-          <TasksPage
-            tasks={tasks}
-            shopItems={shopItems}
-            onTaskSave={handleTaskSave}
-            onTaskDelete={handleTaskDelete}
-            onTaskToggle={handleTaskToggle}
-            onTaskReorder={handleTaskReorder}
-            onShopSave={handleShopSave}
-            onShopDelete={handleShopDelete}
-            onShopToggle={handleShopToggle}
-            onShopReorder={handleShopReorder}
-          />
-        )}
+        <MapPage
+          items={allItems}
+          completedCount={completedCount}
+          tasks={tasks}
+          shopItems={shopItems}
+          onTaskToggle={handleTaskToggle}
+          onTaskSave={handleTaskSave}
+          onTaskDelete={handleTaskDelete}
+          onShopToggle={handleShopToggle}
+          onShopSave={handleShopSave}
+          onShopDelete={handleShopDelete}
+          onTaskReorder={handleTaskReorder}
+          onShopReorder={handleShopReorder}
+          walkAnim={walkAnim}
+          onWalkDone={handleWalkDone}
+        />
       </div>
     </>
   );
