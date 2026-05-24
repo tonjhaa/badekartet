@@ -110,7 +110,7 @@ export default function MapPage({
   walkAnim, onWalkDone,
 }: Props) {
   const [modal, setModal] = useState<Modal>(null);
-  const [moodOverride, setMoodOverride] = useState<Mood | null>(null);
+  const [moodPreview, setMoodPreview] = useState<Mood | null>(null);
   const [moodPickerOpen, setMoodPickerOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
 
@@ -119,6 +119,7 @@ export default function MapPage({
     function onClickOutside(e: MouseEvent) {
       if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
         setMoodPickerOpen(false);
+        setMoodPreview(null);
       }
     }
     document.addEventListener('mousedown', onClickOutside);
@@ -171,19 +172,13 @@ export default function MapPage({
           </button>
           {moodPickerOpen && (
             <div className="mood-picker-dropdown">
-              {moodOverride && (
-                <button
-                  className="mood-picker-option mood-picker-reset"
-                  onClick={() => { setMoodOverride(null); setMoodPickerOpen(false); }}
-                >
-                  <span>↩</span> Auto
-                </button>
-              )}
               {MOOD_OPTIONS.map(({ mood, img, label }) => (
                 <button
                   key={mood}
-                  className={`mood-picker-option${moodOverride === mood ? ' active' : ''}`}
-                  onClick={() => { setMoodOverride(mood); setMoodPickerOpen(false); }}
+                  className={`mood-picker-option${moodPreview === mood ? ' active' : ''}`}
+                  onMouseEnter={() => setMoodPreview(mood)}
+                  onMouseLeave={() => setMoodPreview(null)}
+                  onClick={() => { setMoodPickerOpen(false); setMoodPreview(null); }}
                 >
                   <img src={`${import.meta.env.BASE_URL}${img}`} alt={label} className="mood-picker-img" />
                   {label}
@@ -214,7 +209,7 @@ export default function MapPage({
             lastProgressTime={lastProgressTime}
             pendingTasks={pendingTasks}
             pendingShop={pendingShop}
-            moodOverride={moodOverride}
+            moodOverride={moodPreview}
           />
         </div>
       </div>

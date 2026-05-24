@@ -148,7 +148,6 @@ body {
 }
 .mood-picker-option:hover { background: rgba(10,191,188,.1); }
 .mood-picker-option.active { background: rgba(10,191,188,.15); color: var(--teal); }
-.mood-picker-reset { color: #888; font-weight: 500; }
 .mood-picker-img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
 .level-card-inner {
   display: flex; align-items: flex-end; gap: 10px;
