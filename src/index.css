@@ -329,7 +329,6 @@ body {
   border-radius: 50px; border: 1.5px solid rgba(10,191,188,.3);
 }
 .quick-tasks-list {
-  max-height: 280px; overflow-y: auto;
   scrollbar-width: thin; scrollbar-color: rgba(10,191,188,.3) transparent;
 }
 .quick-task-row {

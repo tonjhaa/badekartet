@@ -230,9 +230,9 @@ export default function App() {
     const t = tasks.find(t => t.id === id);
     if (t) {
       const nowDone = !t.done;
+      if (nowDone) playFanfare(); // must run synchronously before any await
       await supabase.from('tasks').update({ done: nowDone }).eq('id', id);
       if (nowDone) {
-        playFanfare();
         celebrate(t.assignee);
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
@@ -263,9 +263,9 @@ export default function App() {
     const s = shopItems.find(s => s.id === id);
     if (s) {
       const nowBought = !s.bought;
+      if (nowBought) playFanfare(); // must run synchronously before any await
       await supabase.from('shop_items').update({ bought: nowBought }).eq('id', id);
       if (nowBought) {
-        playFanfare();
         celebrate(s.assignee);
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
