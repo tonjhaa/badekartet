@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import type { Task, ShopItem } from '../types';
 
@@ -208,9 +208,16 @@ export default function AnePisken({ lastProgressTime, lastReversalTime, pendingT
   const [imgErr, setImgErr] = useState(false);
   const [, setTick] = useState(0);
   const baseMood = getMood(lastProgressTime, lastReversalTime);
+  const prevMoodRef = useRef<Mood | null>(null);
   const mood: Mood = hasOverdueItems
     ? MOOD_ORDER[Math.max(MOOD_ORDER.indexOf(baseMood), MOOD_ORDER.indexOf('rasende'))]
     : baseMood;
+
+  // Reset image error flag when mood changes so each mood gets a fresh load attempt
+  if (prevMoodRef.current !== mood) {
+    prevMoodRef.current = mood;
+    if (imgErr) setImgErr(false);
+  }
 
   // Re-render when jubilation period ends so mood transitions correctly
   useEffect(() => {
