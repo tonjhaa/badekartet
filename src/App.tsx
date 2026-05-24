@@ -106,6 +106,7 @@ export default function App() {
   const [showCompletion, setShowCompletion] = useState(
     () => new URLSearchParams(window.location.search).has('celebrate')
   );
+  const forceOverdue = new URLSearchParams(window.location.search).has('overdue');
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function playFanfare() {
@@ -394,7 +395,7 @@ export default function App() {
       <div className="sky-bg" />
       <div className="cloud c1" /><div className="cloud c2" /><div className="cloud c3" />
       <div className="sun" /><div className="grass" />
-      {hasOverdueItems && <OverdueRain />}
+      {(hasOverdueItems || forceOverdue) && <OverdueRain />}
       {showCompletion && <CompletionScreen onClose={() => setShowCompletion(false)} />}
 
       {toast && (

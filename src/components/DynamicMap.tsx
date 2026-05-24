@@ -290,6 +290,7 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
               key={item.id}
               onMouseEnter={() => setHoveredNode(i)}
               onMouseLeave={() => setHoveredNode(null)}
+              onClick={() => setHoveredNode(isHovered ? null : i)}
               style={{ cursor: 'pointer' }}
             >
               <circle cx={nx} cy={ny} r={26} fill="#0ABFBC" opacity={0.12} />
