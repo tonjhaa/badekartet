@@ -164,17 +164,13 @@ export default function App() {
 
   const completedCount = allItems.filter(i => i.done).length;
 
-  function maxSortOrder(list: { sort_order: number }[]) {
-    return list.length > 0 ? Math.max(...list.map(i => i.sort_order)) : Date.now();
-  }
-
   // Task CRUD
   async function handleTaskSave(id: string | null, data: Omit<Task, 'id' | 'done' | 'created_at' | 'sort_order'>) {
     if (id) {
       await supabase.from('tasks').update(data).eq('id', id);
     } else {
-      const sort_order = maxSortOrder(tasks) + 1000;
-      await supabase.from('tasks').insert({ id: uid(), done: false, created_at: Date.now(), sort_order, ...data });
+      const now = Date.now();
+      await supabase.from('tasks').insert({ id: uid(), done: false, created_at: now, sort_order: now, ...data });
     }
   }
   async function handleTaskDelete(id: string) {
@@ -197,8 +193,8 @@ export default function App() {
     if (id) {
       await supabase.from('shop_items').update(data).eq('id', id);
     } else {
-      const sort_order = maxSortOrder(shopItems) + 1000;
-      await supabase.from('shop_items').insert({ id: uid(), bought: false, created_at: Date.now(), sort_order, ...data });
+      const now = Date.now();
+      await supabase.from('shop_items').insert({ id: uid(), bought: false, created_at: now, sort_order: now, ...data });
     }
   }
   async function handleShopDelete(id: string) {
