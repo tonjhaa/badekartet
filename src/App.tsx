@@ -457,6 +457,7 @@ export default function App() {
           onShopReorder={handleShopReorder}
           walkAnim={walkAnim}
           onWalkDone={handleWalkDone}
+          onCelebrate={() => setShowCompletion(true)}
         />
       </div>
     </>

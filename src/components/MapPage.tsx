@@ -69,6 +69,7 @@ interface Props {
   onShopReorder: (id: string, newOrder: number) => void;
   walkAnim?: { from: number; to: number } | null;
   onWalkDone?: () => void;
+  onCelebrate?: () => void;
 }
 
 function SortableQtRow({ id, done, name, deadline, overdue, onToggle, onEdit }: {
@@ -101,7 +102,7 @@ function SortableQtRow({ id, done, name, deadline, overdue, onToggle, onEdit }: 
 }
 
 export default function MapPage({
-  items, completedCount, tasks, shopItems, lastProgressTime, lastReversalTime, jubilantUntil, piskenTrigger,
+  items, completedCount, tasks, shopItems, lastProgressTime, lastReversalTime, jubilantUntil, piskenTrigger, onCelebrate,
   onTaskToggle, onTaskSave, onTaskDelete, onTaskReorder,
   onShopToggle, onShopSave, onShopDelete, onShopReorder,
   walkAnim, onWalkDone,
@@ -182,7 +183,7 @@ export default function MapPage({
 
       <div className="map-layout">
         <div className="map-wrap">
-          <DynamicMap items={items} completedCount={completedCount} walkAnim={walkAnim} onWalkDone={onWalkDone} />
+          <DynamicMap items={items} completedCount={completedCount} walkAnim={walkAnim} onWalkDone={onWalkDone} onCelebrate={onCelebrate} />
         </div>
 
         <div className="quick-tasks">

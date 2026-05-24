@@ -128,9 +128,10 @@ interface Props {
   completedCount: number;
   walkAnim?: { from: number; to: number } | null;
   onWalkDone?: () => void;
+  onCelebrate?: () => void;
 }
 
-export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone }: Props) {
+export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone, onCelebrate }: Props) {
   const n = items.length;
   const svgH = n > 0 ? getPos(n - 1).y + 70 : 300;
 
@@ -313,6 +314,28 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
               </g>
             );
           }
+          const isFinalDone = isNodeDone && i === n - 1 && completedCount === n;
+
+          if (isFinalDone) {
+            return (
+              <g
+                key={item.id}
+                onClick={onCelebrate}
+                style={{ cursor: 'pointer' }}
+              >
+                {/* Pulsing gold aura */}
+                <circle cx={nx} cy={ny} r={40} fill="#FFD93D" opacity={0.18} className="map-pulse" />
+                <circle cx={nx} cy={ny} r={34} fill="#FFD93D" opacity={0.28} className="map-pulse" style={{ animationDelay: '0.3s' }} />
+                {/* Gold ring */}
+                <circle cx={nx} cy={ny} r={27} fill="white" stroke="#C9A227" strokeWidth={4} />
+                <circle cx={nx} cy={ny} r={22} fill="linear-gradient(135deg,#FFD93D,#C9A227)" />
+                <circle cx={nx} cy={ny} r={22} fill="#FFD93D" />
+                {/* Trophy */}
+                <text x={nx} y={ny + 2} textAnchor="middle" dominantBaseline="middle" fontSize={22}>🏆</text>
+              </g>
+            );
+          }
+
           if (isNodeDone) {
             return (
               <g
