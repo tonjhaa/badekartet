@@ -265,6 +265,30 @@ body {
   .map-layout .quick-tasks { width: 100%; }
 }
 
+/* ---- MOBILE ---- */
+@media (max-width: 480px) {
+  .wrap { padding: 0 10px 80px; }
+
+  .game-header {
+    width: calc(100% + 24px);
+    margin-left: -12px;
+    margin-bottom: -36px;
+  }
+  .hc-img { width: 120px; }
+  .hc:first-child { margin-right: -8px; }
+  .hc:last-child { margin-left: -8px; }
+
+  .level-card { padding: 9px 12px 11px; }
+  .level-card-inner { gap: 8px; }
+  .level-name { font-size: 12px; }
+
+  .ane-figure { width: 64px; height: 80px; }
+  .ane-img { width: 64px; }
+
+  .quick-tasks { padding: 12px 10px 8px; margin-top: 10px; }
+  .qt-name { font-size: 12px; }
+}
+
 /* ---- MAP WRAP ---- */
 .map-wrap {
   background: rgba(255,255,255,.5); border: 3px solid rgba(255,255,255,.9);
