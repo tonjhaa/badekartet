@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import type { Task, ShopItem } from '../types';
 
 type Mood = 'jubler' | 'fornoyd' | 'noytral' | 'irritert' | 'rasende';
@@ -129,51 +130,59 @@ interface Props {
 
 export default function AnePisken({ lastProgressTime, pendingTasks, pendingShop }: Props) {
   const [message, setMessage] = useState<string | null>(null);
+  const [closing, setClosing] = useState(false);
   const [imgErr, setImgErr] = useState(false);
   const mood = getMood(lastProgressTime);
 
-  const handleClick = useCallback(() => {
-    if (message) { setMessage(null); return; }
+  const open = useCallback(() => {
     setMessage(getContextMessage(mood, pendingTasks, pendingShop));
-  }, [message, mood, pendingTasks, pendingShop]);
+    setClosing(false);
+  }, [mood, pendingTasks, pendingShop]);
+
+  const close = useCallback(() => {
+    setClosing(true);
+  }, []);
+
+  useEffect(() => {
+    if (!closing) return;
+    const t = setTimeout(() => { setMessage(null); setClosing(false); }, 280);
+    return () => clearTimeout(t);
+  }, [closing]);
+
+  const img = (cls: string) => !imgErr ? (
+    <img
+      key={mood}
+      src={`${import.meta.env.BASE_URL}${MOOD_IMG[mood]}`}
+      alt={`Ane - ${mood}`}
+      className={cls}
+      onError={() => setImgErr(true)}
+    />
+  ) : (
+    <div className="ane-overlay-fallback">{MOOD_FALLBACK[mood]}</div>
+  );
 
   return (
     <>
-      <div className="ane-wrap" onClick={handleClick} title="Klikk for beskjed fra Pisken">
+      <div className="ane-wrap" onClick={message ? close : open} title="Klikk for beskjed fra Pisken">
         <div className={`ane-figure ane-${mood}`}>
-          {!imgErr ? (
-            <img
-              key={mood}
-              src={`${import.meta.env.BASE_URL}${MOOD_IMG[mood]}`}
-              alt={`Ane - ${mood}`}
-              className="ane-img"
-              onError={() => setImgErr(true)}
-            />
-          ) : (
-            <div className="ane-fallback">{MOOD_FALLBACK[mood]}</div>
-          )}
+          {!imgErr
+            ? <img key={mood} src={`${import.meta.env.BASE_URL}${MOOD_IMG[mood]}`} alt="" className="ane-img" onError={() => setImgErr(true)} />
+            : <div className="ane-fallback">{MOOD_FALLBACK[mood]}</div>}
         </div>
         <div className="ane-name">Pisken</div>
       </div>
 
-      {message && (
-        <div className="ane-overlay-bg" onClick={() => setMessage(null)}>
-          <div className={`ane-overlay ane-${mood}`}>
-            {!imgErr ? (
-              <img
-                src={`${import.meta.env.BASE_URL}${MOOD_IMG[mood]}`}
-                alt={`Ane - ${mood}`}
-                className="ane-overlay-img"
-              />
-            ) : (
-              <div className="ane-overlay-fallback">{MOOD_FALLBACK[mood]}</div>
-            )}
+      {message && createPortal(
+        <div className={`ane-overlay-bg${closing ? ' ane-closing' : ''}`} onClick={close}>
+          <div className={`ane-overlay ane-${mood}${closing ? ' ane-closing' : ''}`}>
+            {img('ane-overlay-img')}
             <div className="ane-overlay-bubble">
               <div className="ane-overlay-text">{message}</div>
             </div>
             <div className="ane-overlay-close">trykk for å lukke</div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

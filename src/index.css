@@ -182,29 +182,44 @@ body {
   margin-top: 3px;
 }
 
-/* Overlay */
+/* Overlay — rendered via portal at document.body, no stacking context issues */
 .ane-overlay-bg {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(10,40,80,.35); backdrop-filter: blur(3px);
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(10,40,80,.45); backdrop-filter: blur(4px);
   display: flex; align-items: center; justify-content: center;
-  animation: overlayFadeIn .18s ease;
+  animation: overlayFadeIn .22s ease forwards;
 }
-@keyframes overlayFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.ane-overlay-bg.ane-closing {
+  animation: overlayFadeOut .28s ease forwards;
+}
+@keyframes overlayFadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes overlayFadeOut { from { opacity: 1; } to { opacity: 0; } }
+
 .ane-overlay {
   display: flex; flex-direction: column; align-items: center;
-  animation: overlayPop .22s cubic-bezier(.34,1.56,.64,1);
-  pointer-events: none;
+  animation: overlayPop .25s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.ane-overlay.ane-closing {
+  animation: overlayPopOut .25s cubic-bezier(.55,0,.7,.4) forwards;
 }
 @keyframes overlayPop {
-  from { transform: scale(0.6) translateY(40px); opacity: 0; }
-  to   { transform: scale(1)   translateY(0);    opacity: 1; }
+  from { transform: scale(0.55) translateY(50px); opacity: 0; }
+  to   { transform: scale(1)    translateY(0);    opacity: 1; }
 }
-.ane-overlay-img { width: 180px; height: auto; display: block; filter: drop-shadow(0 8px 16px rgba(0,0,0,.3)); }
-.ane-overlay-fallback { font-size: 100px; line-height: 1; filter: drop-shadow(0 6px 10px rgba(0,0,0,.25)); }
+@keyframes overlayPopOut {
+  from { transform: scale(1)    translateY(0);    opacity: 1; }
+  to   { transform: scale(0.6)  translateY(40px); opacity: 0; }
+}
+
+.ane-overlay-img {
+  width: 220px; height: auto; display: block;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,.35));
+}
+.ane-overlay-fallback { font-size: 110px; line-height: 1; filter: drop-shadow(0 6px 10px rgba(0,0,0,.25)); }
 .ane-overlay-bubble {
   background: white; border: 3px solid var(--teal); border-radius: 18px;
-  padding: 14px 18px; max-width: 280px; margin-top: -8px;
-  box-shadow: 0 6px 24px rgba(0,100,150,.2); position: relative;
+  padding: 16px 20px; max-width: 300px; margin-top: -10px;
+  box-shadow: 0 8px 28px rgba(0,100,150,.22); position: relative;
 }
 .ane-overlay-bubble::before {
   content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
@@ -219,12 +234,12 @@ body {
   border-bottom: 9px solid white;
 }
 .ane-overlay-text {
-  font-size: 15px; font-weight: 700; color: var(--navy); line-height: 1.45;
+  font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.5;
   text-align: center;
 }
 .ane-overlay-close {
-  margin-top: 14px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,.75);
-  pointer-events: none;
+  margin-top: 16px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.7);
+  letter-spacing: .04em;
 }
 
 .ane-rasende .ane-img, .ane-irritert .ane-img,
