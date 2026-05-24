@@ -89,8 +89,14 @@ async function loadShop() {
   return (data ?? []) as ShopItem[];
 }
 
-const PROGRESS_TS_KEY = 'badekartet_last_progress';
-const REVERSAL_TS_KEY = 'badekartet_last_reversal';
+async function loadSharedState() {
+  const { data } = await supabase.from('shared_state').select('last_progress_time,jubilant_until').eq('id', 'singleton').single();
+  return data ?? { last_progress_time: 0, jubilant_until: 0 };
+}
+
+async function saveSharedState(last_progress_time: number, jubilant_until: number) {
+  await supabase.from('shared_state').update({ last_progress_time, jubilant_until, updated_at: new Date().toISOString() }).eq('id', 'singleton');
+}
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -98,13 +104,9 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [walkAnim, setWalkAnim] = useState<{ from: number; to: number } | null>(null);
-  const [lastProgressTime, setLastProgressTime] = useState<number>(
-    () => Number(localStorage.getItem(PROGRESS_TS_KEY) ?? 0)
-  );
-  const [lastReversalTime, setLastReversalTime] = useState<number>(
-    () => Number(localStorage.getItem(REVERSAL_TS_KEY) ?? 0)
-  );
-  const prevProgressTimeRef = useRef<number>(Number(localStorage.getItem(PROGRESS_TS_KEY) ?? 0));
+  const [lastProgressTime, setLastProgressTime] = useState<number>(0);
+  const [lastReversalTime] = useState<number>(0);
+  const prevProgressTimeRef = useRef<number>(0);
   const [jubilantUntil, setJubilantUntil] = useState<number>(0);
   const [piskenTrigger, setPiskenTrigger] = useState<{ msg: string } | null>(null);
   const [showCompletion, setShowCompletion] = useState(
@@ -220,17 +222,18 @@ export default function App() {
 
   function recordProgress() {
     const now = Date.now();
+    const until = now + 60 * 60 * 1000;
     prevProgressTimeRef.current = lastProgressTime;
-    localStorage.setItem(PROGRESS_TS_KEY, String(now));
     setLastProgressTime(now);
-    setJubilantUntil(now + 60 * 60 * 1000);
+    setJubilantUntil(until);
+    saveSharedState(now, until);
   }
 
   function recordUndo() {
     const prev = prevProgressTimeRef.current;
-    localStorage.setItem(PROGRESS_TS_KEY, String(prev));
     setLastProgressTime(prev);
     setJubilantUntil(0);
+    saveSharedState(prev, 0);
   }
 
   function celebrateProgress() {
@@ -262,7 +265,10 @@ export default function App() {
 
   useEffect(() => {
     async function init() {
-      const [t, s] = await Promise.all([loadTasks(), loadShop()]);
+      const [[t, s], mood] = await Promise.all([
+        Promise.all([loadTasks(), loadShop()]),
+        loadSharedState(),
+      ]);
 
       // Seed defaults if DB is empty
       if (t.length === 0 && s.length === 0) {
@@ -278,6 +284,10 @@ export default function App() {
         setTasks(t);
         setShopItems(s);
       }
+
+      prevProgressTimeRef.current = mood.last_progress_time;
+      setLastProgressTime(mood.last_progress_time);
+      setJubilantUntil(mood.jubilant_until);
       setReady(true);
     }
     init();
@@ -290,6 +300,12 @@ export default function App() {
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'shop_items' }, () => {
         loadShop().then(setShopItems);
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'shared_state' }, () => {
+        loadSharedState().then(mood => {
+          setLastProgressTime(mood.last_progress_time);
+          setJubilantUntil(mood.jubilant_until);
+        });
       })
       .subscribe();
 
