@@ -96,7 +96,7 @@ body {
   display: block;
 }
 .header-chars {
-  position: absolute; top: 12px; left: 0; right: 0;
+  position: absolute; top: 20%; left: 0; right: 0;
   display: flex; justify-content: center; gap: 0;
   align-items: flex-start; pointer-events: none;
 }
