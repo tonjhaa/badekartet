@@ -102,6 +102,29 @@ export default function App() {
   const [piskenTrigger, setPiskenTrigger] = useState<{ msg: string } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  function playFanfare() {
+    try {
+      const ctx = new AudioContext();
+      // Short triumphant fanfare: four ascending notes
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5 E5 G5 C6
+      const durations = [0.12, 0.12, 0.12, 0.32];
+      let t = ctx.currentTime + 0.04;
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.22, t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + durations[i]);
+        osc.start(t); osc.stop(t + durations[i]);
+        t += durations[i] * 0.85;
+      });
+      setTimeout(() => ctx.close(), 2000);
+    } catch {}
+  }
+
   function recordProgress() {
     const now = Date.now();
     localStorage.setItem(PROGRESS_TS_KEY, String(now));
@@ -209,6 +232,7 @@ export default function App() {
       const nowDone = !t.done;
       await supabase.from('tasks').update({ done: nowDone }).eq('id', id);
       if (nowDone) {
+        playFanfare();
         celebrate(t.assignee);
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
@@ -241,6 +265,7 @@ export default function App() {
       const nowBought = !s.bought;
       await supabase.from('shop_items').update({ bought: nowBought }).eq('id', id);
       if (nowBought) {
+        playFanfare();
         celebrate(s.assignee);
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
