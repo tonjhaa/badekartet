@@ -217,9 +217,19 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
       <Road d={greyPath} done={false} />
       <Road d={donePath} done />
 
-      {/* Nodes */}
+      {/* Nodes — current node (where characters stand) is yellow, past nodes are teal, future grey */}
       {items.map((item, i) => {
         const { x: nx, y: ny } = getPos(i);
+        const isCurrent = effectiveCompleted > 0 && i === effectiveCompleted - 1;
+        if (isCurrent) {
+          return (
+            <g key={item.id}>
+              <circle cx={nx} cy={ny} r={26} fill="#FFD93D" opacity={0.2} className="map-pulse" />
+              <circle cx={nx} cy={ny} r={19} fill="white" stroke="#FFD93D" strokeWidth={3} />
+              <circle cx={nx} cy={ny} r={7}  fill="#FFD93D" />
+            </g>
+          );
+        }
         if (item.done) {
           return (
             <g key={item.id}>
@@ -227,15 +237,6 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
               <circle cx={nx} cy={ny} r={20} fill="#0ABFBC" opacity={0.18} />
               <circle cx={nx} cy={ny} r={18} fill="#0ABFBC" stroke="white" strokeWidth={3} />
               <text x={nx} y={ny} textAnchor="middle" dominantBaseline="middle" fontSize={15} fill="white">★</text>
-            </g>
-          );
-        }
-        if (i === completedCount) {
-          return (
-            <g key={item.id}>
-              <circle cx={nx} cy={ny} r={26} fill="#FFD93D" opacity={0.2} className="map-pulse" />
-              <circle cx={nx} cy={ny} r={19} fill="white" stroke="#FFD93D" strokeWidth={3} />
-              <circle cx={nx} cy={ny} r={7}  fill="#FFD93D" />
             </g>
           );
         }
