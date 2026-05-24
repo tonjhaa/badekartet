@@ -253,7 +253,8 @@ export default function AnePisken({ lastProgressTime, lastReversalTime, pendingT
             ? <img key={mood} src={`${import.meta.env.BASE_URL}${MOOD_IMG[mood]}`} alt="" className="ane-img" onError={() => setImgErr(true)} />
             : <div className="ane-fallback">{MOOD_FALLBACK[mood]}</div>}
         </div>
-        <div className="ane-name">Pisken</div>
+        <div className="ane-name">Ane «Pisken»</div>
+        <div className="ane-role">Prosjektsjef 🎓</div>
       </div>
 
       {message && createPortal(

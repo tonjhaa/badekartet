@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, memo } from 'react';
+import { createPortal } from 'react-dom';
 import type { MapItem } from '../types';
 
 function getPos(i: number) {
@@ -139,8 +140,21 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
   const animSegRef = useRef<SVGGElement>(null);
   const segLenRef  = useRef(0);
   const rafId      = useRef<number | null>(null);
+  const svgRef       = useRef<SVGSVGElement>(null);
   const [animating, setAnimating] = useState(false);
-  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
+  const [hoveredNode, setHoveredNode]   = useState<number | null>(null);
+  const [tooltipPos,  setTooltipPos]    = useState<{ x: number; y: number } | null>(null);
+
+  function enterNode(i: number) {
+    if (!svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    const scaleX = rect.width  / 340;
+    const scaleY = rect.height / svgRef.current.viewBox.baseVal.height;
+    const { x: sx, y: sy } = getPos(i);
+    setHoveredNode(i);
+    setTooltipPos({ x: rect.left + sx * scaleX, y: rect.top + sy * scaleY });
+  }
+  function leaveNode() { setHoveredNode(null); setTooltipPos(null); }
 
   const isReverse = walkAnim ? walkAnim.to < walkAnim.from : false;
 
@@ -233,7 +247,8 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
     : '';
 
   return (
-    <svg className="map-svg" viewBox={`0 0 340 ${svgH}`} style={{ display: 'block', width: '100%', overflow: 'visible' }}>
+    <>
+    <svg ref={svgRef} className="map-svg" viewBox={`0 0 340 ${svgH}`} style={{ display: 'block', width: '100%', overflow: 'visible' }}>
       <defs>
         <linearGradient id="mapBg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%"   stopColor="#EBF8FF" />
@@ -302,9 +317,9 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
             return (
               <g
                 key={item.id}
-                onMouseEnter={() => setHoveredNode(i)}
-                onMouseLeave={() => setHoveredNode(null)}
-                onClick={() => setHoveredNode(hoveredNode === i ? null : i)}
+                onMouseEnter={() => enterNode(i)}
+                onMouseLeave={leaveNode}
+                onClick={() => hoveredNode === i ? leaveNode() : enterNode(i)}
                 style={{ cursor: 'pointer' }}
               >
                 <circle cx={nx} cy={ny} r={31} fill="#FFD93D" opacity={0.22} />
@@ -350,45 +365,45 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
         </g>
       </g>
 
-      {/* Tooltip — rendered last so always on top of everything */}
-      {hoveredNode !== null && hoveredNode < completedCount && (() => {
-        const { x: tx, y: ty } = getPos(hoveredNode);
-        const below = ty < 130;
-        const TW = 162; const TH = 58;
-        const rx = Math.max(4, Math.min(tx - TW / 2, 340 - TW - 4));
-        const ry = below ? ty + 30 : ty - TH - 16;
-        const arrowBase = below ? ry : ry + TH;
-        const arrowTip = below ? ty + 26 : ty - 12;
-        const doneItems = items.filter(it => it.done);
-        const item = doneItems[hoveredNode] ?? items[hoveredNode];
-        return (
-          <g style={{ pointerEvents: 'none' }}>
-            <rect x={rx} y={ry} width={TW} height={TH} rx={12}
-              fill="white" stroke="#0ABFBC" strokeWidth={2}
-              filter="drop-shadow(0 4px 12px rgba(0,0,0,0.22))" />
-            {/* Arrow */}
-            <polygon
-              points={`${tx - 9},${arrowBase} ${tx + 9},${arrowBase} ${tx},${arrowTip}`}
-              fill="white" stroke="#0ABFBC" strokeWidth={2} strokeLinejoin="round" />
-            <line x1={tx - 8} y1={arrowBase} x2={tx + 8} y2={arrowBase}
-              stroke="white" strokeWidth={3} />
-            {/* ✅ badge */}
-            <text x={rx + 16} y={ry + 22} textAnchor="middle" dominantBaseline="middle" fontSize={16}>✅</text>
-            {/* Task name */}
-            <text x={rx + 30} y={ry + 20} dominantBaseline="middle"
-              fontSize={11} fontWeight="800" fill="#1A3A5C"
-              style={{ fontFamily: "'Baloo 2', cursive" }}>
-              {item.name.length > 18 ? item.name.slice(0, 17) + '…' : item.name}
-            </text>
-            {/* Praise */}
-            <text x={rx + 30} y={ry + 40} dominantBaseline="middle"
-              fontSize={10} fill="#0ABFBC"
-              style={{ fontFamily: "'Baloo 2', cursive" }}>
-              {nodePraise(hoveredNode)}
-            </text>
-          </g>
-        );
-      })()}
     </svg>
+
+    {hoveredNode !== null && hoveredNode < completedCount && tooltipPos && (() => {
+      const doneItems = items.filter(it => it.done);
+      const item = doneItems[hoveredNode] ?? items[hoveredNode];
+      return createPortal(
+        <div style={{
+          position: 'fixed',
+          left: tooltipPos.x,
+          top: tooltipPos.y - 80,
+          transform: 'translateX(-50%)',
+          background: 'white',
+          border: '2px solid #0ABFBC',
+          borderRadius: 14,
+          padding: '8px 14px 8px 10px',
+          boxShadow: '0 6px 18px rgba(0,0,0,0.22)',
+          pointerEvents: 'none',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          minWidth: 140,
+          maxWidth: 220,
+          fontFamily: "'Baloo 2', cursive",
+          whiteSpace: 'nowrap',
+        }}>
+          <span style={{ fontSize: 18 }}>✅</span>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: 12, color: '#1A3A5C', lineHeight: 1.2 }}>
+              {item.name}
+            </div>
+            <div style={{ fontSize: 10, color: '#0ABFBC', marginTop: 2 }}>
+              {nodePraise(hoveredNode)}
+            </div>
+          </div>
+        </div>,
+        document.body
+      );
+    })()}
+    </>
   );
 }

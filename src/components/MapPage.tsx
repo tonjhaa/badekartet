@@ -148,9 +148,10 @@ export default function MapPage({
       <div className="level-card">
         <div className="level-card-inner">
           <div className="level-progress-area">
+            <div className="level-header-label">🛁 Fremgang mot ferdig bad</div>
             <div className="level-top">
               <div className="level-name">{levelTitle(pct)}</div>
-              <div className="level-pill">{completedCount} av {total}</div>
+              <div className="level-pill">{pct}% · {completedCount} av {total} steg</div>
             </div>
             <div className="progress-track">
               <div className="progress-fill" style={{ width: `${Math.max(pct, 2)}%` }}>
@@ -160,7 +161,9 @@ export default function MapPage({
               </div>
             </div>
             <div className="steps-left">
-              {remaining > 0 ? `${remaining} steg igjen` : 'Ferdig! Nytt bad venter!'}
+              {remaining > 0
+                ? `${remaining} veipunkt gjenstår til ferdig bad`
+                : '🎉 Ferdig! Drømmebad levert!'}
             </div>
           </div>
           <AnePisken
