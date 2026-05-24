@@ -206,10 +206,22 @@ export default function AnePisken({ lastProgressTime, lastReversalTime, pendingT
   const [message, setMessage] = useState<string | null>(null);
   const [closing, setClosing] = useState(false);
   const [imgErr, setImgErr] = useState(false);
+  const [, setTick] = useState(0);
   const baseMood = getMood(lastProgressTime, lastReversalTime);
   const mood: Mood = hasOverdueItems
     ? MOOD_ORDER[Math.max(MOOD_ORDER.indexOf(baseMood), MOOD_ORDER.indexOf('rasende'))]
     : baseMood;
+
+  // Re-render when jubilation period ends so mood transitions correctly
+  useEffect(() => {
+    if (!lastProgressTime) return;
+    const ONE_HOUR = 60 * 60 * 1000;
+    const elapsed = Date.now() - lastProgressTime;
+    const remaining = ONE_HOUR - elapsed;
+    if (remaining <= 0) return;
+    const t = setTimeout(() => setTick(n => n + 1), remaining + 100);
+    return () => clearTimeout(t);
+  }, [lastProgressTime]);
 
   const open = useCallback(() => {
     setMessage(getContextMessage(mood, pendingTasks, pendingShop));
