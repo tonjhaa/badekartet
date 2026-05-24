@@ -278,7 +278,7 @@ body {
   .hc-img { width: 120px; }
   .hc:first-child { margin-right: -8px; }
   .hc:last-child { margin-left: -8px; }
-  .header-chars { top: auto; bottom: -10px; }
+  .header-chars { top: 3%; }
 
   .level-card { padding: 9px 12px 11px; }
   .level-card-inner { gap: 8px; }
