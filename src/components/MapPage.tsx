@@ -7,6 +7,7 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-
 import { CSS } from '@dnd-kit/utilities';
 import DynamicMap from './DynamicMap';
 import ItemModal from './ItemModal';
+import AnePisken from './AnePisken';
 import type { MapItem, Task, ShopItem } from '../types';
 
 const LEVEL_TITLES = [
@@ -52,6 +53,7 @@ interface Props {
   completedCount: number;
   tasks: Task[];
   shopItems: ShopItem[];
+  lastProgressTime: number;
   onTaskToggle: (id: string) => void;
   onTaskSave: (id: string | null, data: Omit<Task, 'id' | 'done' | 'created_at' | 'sort_order'>) => void;
   onTaskDelete: (id: string) => void;
@@ -75,10 +77,10 @@ function SortableQtRow({ id, done, name, deadline, onToggle, onEdit }: {
       <span className="qt-drag-handle" {...attributes} {...listeners}>
         <i className="fa-solid fa-grip-lines" />
       </span>
-      <div className="qt-circle" onClick={onToggle}>
+      <div className={`qt-circle${done ? ' checked' : ''}`} onClick={onToggle}>
         {done
-          ? <i className="fa-solid fa-check" style={{ fontSize: 9 }} />
-          : <i className="fa-solid fa-check" style={{ fontSize: 9, opacity: 0 }} />}
+          ? <i className="fa-solid fa-check" style={{ fontSize: 12 }} />
+          : <i className="fa-solid fa-check" style={{ fontSize: 12, opacity: 0 }} />}
       </div>
       <div className="qt-info" onClick={onToggle}>
         <span className={`qt-name${done ? ' done' : ''}`}>{name}</span>
@@ -92,7 +94,7 @@ function SortableQtRow({ id, done, name, deadline, onToggle, onEdit }: {
 }
 
 export default function MapPage({
-  items, completedCount, tasks, shopItems,
+  items, completedCount, tasks, shopItems, lastProgressTime,
   onTaskToggle, onTaskSave, onTaskDelete, onTaskReorder,
   onShopToggle, onShopSave, onShopDelete, onShopReorder,
   walkAnim, onWalkDone,
@@ -134,19 +136,28 @@ export default function MapPage({
   return (
     <>
       <div className="level-card">
-        <div className="level-top">
-          <div className="level-name">{levelTitle(pct)}</div>
-          <div className="level-pill">{completedCount} av {total}</div>
-        </div>
-        <div className="progress-track">
-          <div className="progress-fill" style={{ width: `${Math.max(pct, 2)}%` }}>
-            <div className="progress-star">
-              <i className="fa-solid fa-star" style={{ fontSize: 11 }} />
+        <div className="level-card-inner">
+          <div className="level-progress-area">
+            <div className="level-top">
+              <div className="level-name">{levelTitle(pct)}</div>
+              <div className="level-pill">{completedCount} av {total}</div>
+            </div>
+            <div className="progress-track">
+              <div className="progress-fill" style={{ width: `${Math.max(pct, 2)}%` }}>
+                <div className="progress-star">
+                  <i className="fa-solid fa-star" style={{ fontSize: 11 }} />
+                </div>
+              </div>
+            </div>
+            <div className="steps-left">
+              {remaining > 0 ? `${remaining} steg igjen` : 'Ferdig! Nytt bad venter!'}
             </div>
           </div>
-        </div>
-        <div className="steps-left">
-          {remaining > 0 ? `${remaining} steg igjen` : 'Ferdig! Nytt bad venter!'}
+          <AnePisken
+            lastProgressTime={lastProgressTime}
+            pendingTasks={pendingTasks}
+            pendingShop={pendingShop}
+          />
         </div>
       </div>
 

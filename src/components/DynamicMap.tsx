@@ -1,29 +1,111 @@
-import { useState, useEffect, useRef } from 'react';
+import { useRef, useEffect, useState, memo } from 'react';
 import type { MapItem } from '../types';
-
-const STOP_ICONS: Record<string, string> = {
-  shop: '',   // cart
-  task0: '',  // phone
-  task1: '',  // wrench
-  task2: '',  // broom
-  task3: '',  // hammer
-  task4: '',  // shower
-  task5: '',  // paw (fun wildcard)
-};
-
-function stopIcon(item: MapItem, taskIndex: number) {
-  if (item.kind === 'shop') return STOP_ICONS.shop;
-  return STOP_ICONS[`task${taskIndex % 6}`];
-}
 
 function getPos(i: number) {
   return { x: i % 2 === 0 ? 95 : 245, y: 130 + i * 110 };
 }
 
-function curvePath(from: { x: number; y: number }, to: { x: number; y: number }) {
-  const mid = (from.y + to.y) / 2;
-  return `M ${from.x},${from.y} C ${from.x},${mid} ${to.x},${mid} ${to.x},${to.y}`;
+function makePath(from: number, to: number): string {
+  if (to <= from) return '';
+  const pts = Array.from({ length: to - from + 1 }, (_, k) => getPos(from + k));
+  let d = `M ${pts[0].x} ${pts[0].y}`;
+  for (let i = 1; i < pts.length; i++) {
+    const [p, c] = [pts[i - 1], pts[i]];
+    const my = (p.y + c.y) / 2;
+    d += ` C ${p.x} ${my} ${c.x} ${my} ${c.x} ${c.y}`;
+  }
+  return d;
 }
+
+// --- Decorations (memoized so they don't re-render during animation) ---
+
+const Flower = memo(function Flower({ x, y, r, alive }: { x: number; y: number; r: number; alive: boolean }) {
+  const pc = alive ? '#FF8CC8' : '#b8ccd4';
+  const cc = alive ? '#FFD93D' : '#c8d8e0';
+  return (
+    <g opacity={alive ? 1 : 0.38}>
+      {[0, 1, 2, 3, 4, 5].map(i => {
+        const a = (i / 6) * Math.PI * 2;
+        return <circle key={i} cx={x + Math.cos(a) * r * 0.65} cy={y + Math.sin(a) * r * 0.65} r={r * 0.38} fill={pc} />;
+      })}
+      <circle cx={x} cy={y} r={r * 0.4} fill={cc} />
+    </g>
+  );
+});
+
+const Bubble = memo(function Bubble({ x, y, r, alive }: { x: number; y: number; r: number; alive: boolean }) {
+  const sc = alive ? '#48CAE4' : '#b8ccd4';
+  return (
+    <g opacity={alive ? 0.85 : 0.28}>
+      <circle cx={x} cy={y} r={r} fill="rgba(200,245,255,0.2)" stroke={sc} strokeWidth={1.5} />
+      <circle cx={x - r * 0.3} cy={y - r * 0.32} r={r * 0.22} fill="white" opacity={0.75} />
+    </g>
+  );
+});
+
+const Sparkle = memo(function Sparkle({ x, y, s, alive }: { x: number; y: number; s: number; alive: boolean }) {
+  const c = alive ? '#FFD93D' : '#c0d0d8';
+  const d = `M${x},${y - s} L${x + s * .28},${y - s * .28} L${x + s},${y} L${x + s * .28},${y + s * .28} L${x},${y + s} L${x - s * .28},${y + s * .28} L${x - s},${y} L${x - s * .28},${y - s * .28}Z`;
+  return <path d={d} fill={c} opacity={alive ? 1 : 0.32} />;
+});
+
+const Duck = memo(function Duck({ x, y, s, alive }: { x: number; y: number; s: number; alive: boolean }) {
+  const bc = alive ? '#FFD93D' : '#c8d8e0';
+  const bk = alive ? '#FFA500' : '#b0c0cc';
+  return (
+    <g opacity={alive ? 1 : 0.32}>
+      <ellipse cx={x} cy={y + s * .25} rx={s * .75} ry={s * .48} fill={bc} />
+      <circle cx={x + s * .3} cy={y - s * .05} r={s * .38} fill={bc} />
+      <path d={`M${x + s * .62},${y - s * .05} L${x + s * .92},${y + s * .05} L${x + s * .62},${y + s * .15}Z`} fill={bk} />
+      <circle cx={x + s * .42} cy={y - s * .17} r={s * .07} fill="#222" />
+    </g>
+  );
+});
+
+const Tiles = memo(function Tiles({ x, y, s, alive }: { x: number; y: number; s: number; alive: boolean }) {
+  const c1 = alive ? '#0ABFBC' : '#c0d4dc';
+  const c2 = alive ? '#7DE8E6' : '#d4e4ec';
+  const h = s * 0.48;
+  const cells: [number, number, string][] = [[-h, -h, c1], [1, -h, c2], [-h, 1, c2], [1, 1, c1]];
+  return (
+    <g opacity={alive ? 0.85 : 0.28}>
+      {cells.map(([dx, dy, tc], i) => (
+        <rect key={i} x={x + dx} y={y + dy} width={h - 1} height={h - 1} rx={2} fill={tc} stroke="white" strokeWidth={1} />
+      ))}
+    </g>
+  );
+});
+
+type DecoType = 'flower' | 'bubble' | 'sparkle' | 'duck' | 'tiles';
+const L: DecoType[] = ['flower', 'bubble', 'sparkle', 'tiles', 'duck', 'flower', 'bubble', 'sparkle'];
+const R: DecoType[] = ['bubble', 'sparkle', 'duck', 'flower', 'tiles', 'sparkle', 'flower', 'bubble'];
+
+function Deco({ type, x, y, alive }: { type: DecoType; x: number; y: number; alive: boolean }) {
+  if (type === 'flower')  return <Flower  x={x} y={y} r={11} alive={alive} />;
+  if (type === 'bubble')  return <Bubble  x={x} y={y} r={10} alive={alive} />;
+  if (type === 'sparkle') return <Sparkle x={x} y={y} s={8}  alive={alive} />;
+  if (type === 'duck')    return <Duck    x={x} y={y} s={17} alive={alive} />;
+  if (type === 'tiles')   return <Tiles   x={x} y={y} s={18} alive={alive} />;
+  return null;
+}
+
+// --- Road ---
+
+const Road = memo(function Road({ d, done }: { d: string; done: boolean }) {
+  if (!d) return null;
+  const outer = done ? '#00968C' : '#a8c0cc';
+  const inner = done ? '#0ABFBC' : '#ccdde6';
+  return (
+    <>
+      <path d={d} stroke="rgba(0,0,0,0.09)" strokeWidth={26} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={d} stroke={outer} strokeWidth={22} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={d} stroke={inner} strokeWidth={15} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={d} stroke="rgba(255,255,255,0.5)" strokeWidth={10} fill="none" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="5 12" />
+    </>
+  );
+});
+
+// --- Main ---
 
 interface Props {
   items: MapItem[];
@@ -33,192 +115,157 @@ interface Props {
 }
 
 export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone }: Props) {
-  const total = items.length;
-  const activeIdx = Math.min(completedCount, total - 1);
-  const goalPos = getPos(total);
-  const svgHeight = goalPos.y + 80;
+  const n = items.length;
+  const svgH = n > 0 ? getPos(n - 1).y + 110 : 300;
 
-  const [charAnimPos, setCharAnimPos] = useState<{ x: number; y: number } | null>(null);
-  const rafId = useRef(0);
-  const onWalkDoneRef = useRef(onWalkDone);
-  onWalkDoneRef.current = onWalkDone;
+  // Refs for direct DOM manipulation during walk animation (avoids re-renders at 60fps)
+  const stigRef  = useRef<SVGImageElement>(null);
+  const ninaGRef = useRef<SVGGElement>(null);
+  const glowRef  = useRef<SVGCircleElement>(null);
+  const rafId    = useRef<number | null>(null);
+  const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
-    if (!walkAnim || total === 0) return;
-
-    const fromPos = getPos(Math.min(walkAnim.from, total - 1));
-    const toPos = getPos(Math.min(walkAnim.to, total - 1));
-
-    if (fromPos.x === toPos.x && fromPos.y === toPos.y) {
-      onWalkDoneRef.current?.();
-      return;
-    }
-
-    const start = performance.now();
+    if (!walkAnim || n === 0) return;
+    // walkAnim stores completed counts, convert to 0-based node indices
+    const from = getPos(Math.min(Math.max(walkAnim.from - 1, 0), n - 1));
+    const to   = getPos(Math.min(Math.max(walkAnim.to   - 1, 0), n - 1));
     const duration = 1800;
+    const start = performance.now();
+
+    setAnimating(true); // single re-render to show glow
+
+    function ease(t: number) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
 
     function tick(now: number) {
-      const t = Math.min(1, (now - start) / duration);
-      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-      setCharAnimPos({
-        x: fromPos.x + (toPos.x - fromPos.x) * ease,
-        y: fromPos.y + (toPos.y - fromPos.y) * ease,
-      });
+      const t = Math.min((now - start) / duration, 1);
+      const e = ease(t);
+      const cx = from.x + (to.x - from.x) * e;
+      const cy = from.y + (to.y - from.y) * e;
+
+      // Direct DOM updates — no React re-render
+      stigRef.current?.setAttribute('x', String(cx + 20));
+      stigRef.current?.setAttribute('y', String(cy - 75));
+
+      if (ninaGRef.current) {
+        ninaGRef.current.setAttribute('transform', `translate(${(cx - 68) * 2 + 48} 0) scale(-1 1)`);
+        const img = ninaGRef.current.querySelector('image');
+        if (img) { img.setAttribute('x', String(cx - 68)); img.setAttribute('y', String(cy - 70)); }
+      }
+
+      if (glowRef.current) {
+        glowRef.current.setAttribute('cx', String(cx));
+        glowRef.current.setAttribute('cy', String(cy + 18));
+      }
+
       if (t < 1) {
         rafId.current = requestAnimationFrame(tick);
       } else {
-        setCharAnimPos(null);
-        onWalkDoneRef.current?.();
+        setAnimating(false); // single re-render to hide glow
+        onWalkDone?.();
       }
     }
 
     rafId.current = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(rafId.current);
-      setCharAnimPos(null);
-    };
-  }, [walkAnim, total]);
+    return () => { if (rafId.current) cancelAnimationFrame(rafId.current); };
+  }, [walkAnim]);
 
-  let taskCounter = 0;
+  // effectiveCompleted: only used for character rest position so they stand at destination
+  // Road and node coloring use actual completedCount to avoid premature teal ahead
+  const effectiveCompleted = walkAnim ? Math.max(walkAnim.to, completedCount) : completedCount;
 
-  const charPos = charAnimPos ?? (total > 0 ? getPos(activeIdx) : null);
+  const activeIdx = n > 0 ? Math.min(Math.max(effectiveCompleted - 1, 0), n - 1) : 0;
+  const rest = n > 0 ? getPos(activeIdx) : { x: 170, y: 130 };
+
+  const lastDone  = completedCount - 1;
+  const donePath  = lastDone >= 1 && n >= 2 ? makePath(0, Math.min(lastDone, n - 1)) : '';
+  const greyStart = Math.max(lastDone, 0);
+  const greyPath  = n >= 2 ? makePath(greyStart, n - 1) : '';
 
   return (
-    <svg
-      className="map-svg"
-      viewBox={`0 0 340 ${svgHeight}`}
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg className="map-svg" viewBox={`0 0 340 ${svgH}`} style={{ display: 'block', width: '100%', overflow: 'visible' }}>
       <defs>
-        <radialGradient id="gD" cx="35%" cy="30%">
-          <stop offset="0%" stopColor="#90E06A" /><stop offset="100%" stopColor="#3a9e3a" />
-        </radialGradient>
-        <radialGradient id="gA" cx="35%" cy="30%">
-          <stop offset="0%" stopColor="#FFE566" /><stop offset="100%" stopColor="#FF8C42" />
-        </radialGradient>
-        <radialGradient id="gS" cx="35%" cy="30%">
-          <stop offset="0%" stopColor="#dce9f0" /><stop offset="50%" stopColor="#0ABFBC" /><stop offset="100%" stopColor="#005f8e" />
-        </radialGradient>
-        <radialGradient id="gL" cx="35%" cy="30%">
-          <stop offset="0%" stopColor="#dce9f0" /><stop offset="100%" stopColor="#b0c8d8" />
-        </radialGradient>
-        <filter id="sh"><feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="rgba(0,100,150,.2)" /></filter>
-        <filter id="gw"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-        <filter id="csh"><feDropShadow dx="0" dy="7" stdDeviation="5" floodColor="rgba(0,80,120,.22)" /></filter>
+        <linearGradient id="mapBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#EBF8FF" />
+          <stop offset="100%" stopColor="#D4F5E9" />
+        </linearGradient>
       </defs>
 
-      {/* Paths */}
-      {items.map((_, i) => {
-        if (i >= total - 1) return null;
-        const from = getPos(i);
-        const to = getPos(i + 1);
-        const done = i < completedCount - 1;
+      <rect x={0} y={0} width={340} height={svgH} fill="url(#mapBg)" rx={18} />
+
+      {/* Decorations */}
+      {Array.from({ length: Math.max(n - 1, 0) }).map((_, i) => {
+        const yMid = 130 + i * 110 + 55;
+        const alive = completedCount > i;
         return (
-          <g key={`path-${i}`}>
-            <path d={curvePath(from, to)} stroke={done ? '#6CC44A' : 'var(--gray)'} strokeWidth={done ? 10 : 9} strokeLinecap="round" fill="none" opacity={done ? 1 : Math.max(.2, .55 - (i - completedCount) * .08)} />
-            <path d={curvePath(from, to)} stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" strokeDasharray="8,14" opacity={done ? .6 : Math.max(.1, .4 - (i - completedCount) * .06)} />
+          <g key={i}>
+            <Deco type={L[i % L.length]} x={24}  y={yMid} alive={alive} />
+            <Deco type={R[i % R.length]} x={316} y={yMid} alive={alive} />
+            <Bubble x={44}  y={yMid + (i % 2 === 0 ? -24 : 24)} r={5} alive={alive} />
+            <Bubble x={296} y={yMid + (i % 2 === 0 ?  24 : -24)} r={5} alive={alive} />
           </g>
         );
       })}
 
-      {/* Path to goal */}
-      {total > 0 && (() => {
-        const from = getPos(total - 1);
-        return (
-          <line x1={from.x} y1={from.y} x2={goalPos.x} y2={goalPos.y - 36}
-            stroke="var(--gray)" strokeWidth="9" strokeLinecap="round" opacity=".2" />
-        );
-      })()}
+      {/* Roads */}
+      <Road d={greyPath} done={false} />
+      <Road d={donePath} done />
 
-      {/* Stops */}
+      {/* Nodes */}
       {items.map((item, i) => {
-        const { x, y } = getPos(i);
-        const done = i < completedCount;
-        const active = i === completedCount;
-        const opacity = done || active ? 1 : Math.max(.25, .55 - (i - completedCount) * .08);
-        const icon = stopIcon(item, item.kind === 'task' ? taskCounter : 0);
-        if (item.kind === 'task') taskCounter++;
-
+        const { x: nx, y: ny } = getPos(i);
+        if (item.done) {
+          return (
+            <g key={item.id}>
+              <circle cx={nx} cy={ny} r={26} fill="#0ABFBC" opacity={0.12} />
+              <circle cx={nx} cy={ny} r={20} fill="#0ABFBC" opacity={0.18} />
+              <circle cx={nx} cy={ny} r={18} fill="#0ABFBC" stroke="white" strokeWidth={3} />
+              <text x={nx} y={ny} textAnchor="middle" dominantBaseline="middle" fontSize={15} fill="white">★</text>
+            </g>
+          );
+        }
+        if (i === completedCount) {
+          return (
+            <g key={item.id}>
+              <circle cx={nx} cy={ny} r={26} fill="#FFD93D" opacity={0.2} className="map-pulse" />
+              <circle cx={nx} cy={ny} r={19} fill="white" stroke="#FFD93D" strokeWidth={3} />
+              <circle cx={nx} cy={ny} r={7}  fill="#FFD93D" />
+            </g>
+          );
+        }
         return (
-          <g key={item.id} filter={active ? 'url(#gw)' : 'url(#sh)'} transform={`translate(${x},${y})`} opacity={opacity}>
-            {active && (
-              <circle r="30" fill="none" stroke="#FFD93D" strokeWidth="2.5">
-                <animate attributeName="r" values="32;48;32" dur="1.6s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values=".7;0;.7" dur="1.6s" repeatCount="indefinite" />
-              </circle>
-            )}
-            <circle r={active ? 32 : 28} fill={done ? 'url(#gD)' : active ? 'url(#gA)' : 'url(#gL)'} stroke="white" strokeWidth={active ? 4 : 3.5} />
-            <ellipse cx="-9" cy="-12" rx="8" ry="4" fill="rgba(255,255,255,.3)" transform="rotate(-22,-9,-12)" />
-            <text x="0" y="6" textAnchor="middle" dominantBaseline="middle"
-              fontFamily="'Font Awesome 6 Free'" fontWeight="900" fontSize="16"
-              fill={done ? 'rgba(255,255,255,.95)' : active ? 'rgba(255,255,255,.95)' : '#7a9ab0'}>
-              {icon}
-            </text>
-            {done && (
-              <>
-                <circle cx="20" cy="-20" r="11" fill="#FFD93D" stroke="white" strokeWidth="2.5" />
-                <text x="20" y="-20" textAnchor="middle" dominantBaseline="middle"
-                  fontFamily="'Font Awesome 6 Free'" fontWeight="900" fontSize="9" fill="#2d6a4f">
-                  {''}
-                </text>
-              </>
-            )}
-            {active && (
-              <>
-                <rect x="-18" y="-52" width="36" height="17" rx="8.5" fill="#FF6B6B" />
-                <text x="0" y="-44" textAnchor="middle" fontFamily="Baloo 2,cursive" fontSize="10" fontWeight="800" fill="white">NÅ!</text>
-                <line x1="0" y1="-34" x2="0" y2="-40" stroke="#FFD93D" strokeWidth="2.5" strokeLinecap="round" />
-                <polygon points="0,-32 -4,-38 4,-38" fill="#FFD93D" />
-              </>
-            )}
+          <g key={item.id} opacity={0.5}>
+            <circle cx={nx} cy={ny} r={16} fill="white" stroke="#b8ccd4" strokeWidth={2} />
           </g>
         );
       })}
 
-      {/* Goal node */}
-      <g filter="url(#sh)" transform={`translate(${goalPos.x},${goalPos.y})`} opacity={completedCount === total && total > 0 ? 1 : .3}>
-        <circle r="34" fill="url(#gS)" stroke="white" strokeWidth="4" />
-        <ellipse cx="-12" cy="-16" rx="11" ry="6" fill="rgba(255,255,255,.3)" transform="rotate(-25,-12,-16)" />
-        <text x="0" y="5" textAnchor="middle" dominantBaseline="middle"
-          fontFamily="'Font Awesome 6 Free'" fontWeight="900" fontSize="18" fill="rgba(255,255,255,.9)">
-          {''}
-        </text>
-        <text x="0" y="50" textAnchor="middle" fontFamily="Baloo 2,cursive" fontSize="10" fontWeight="800" fill="#3a7ca5">
-          Nytt bad!
-        </text>
+      {/* Walk glow (visibility toggled via state, position via ref) */}
+      <circle
+        ref={glowRef}
+        cx={rest.x} cy={rest.y + 18} r={28}
+        fill="rgba(255,220,50,0.16)"
+        visibility={animating ? 'visible' : 'hidden'}
+      />
+
+      {/* Characters (position set via ref during animation) */}
+      <g style={{ filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.18))' }}>
+        <image
+          ref={stigRef}
+          href={`${import.meta.env.BASE_URL}stig.png`}
+          x={rest.x + 20} y={rest.y - 75}
+          width={52} height={64}
+          className="map-stig"
+        />
+        <g ref={ninaGRef} transform={`translate(${(rest.x - 68) * 2 + 48} 0) scale(-1 1)`}>
+          <image
+            href={`${import.meta.env.BASE_URL}nina.png`}
+            x={rest.x - 68} y={rest.y - 70}
+            width={48} height={60}
+            className="map-nina"
+          />
+        </g>
       </g>
-
-      {/* Walk glow */}
-      {charAnimPos && charPos && (
-        <circle cx={charPos.x} cy={charPos.y} r="45" fill="none" stroke="#FFD93D" strokeWidth="3">
-          <animate attributeName="r" values="45;62;45" dur="0.7s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0.6;0;0.6" dur="0.7s" repeatCount="indefinite" />
-        </circle>
-      )}
-
-      {/* Nina & Stig — symmetrically flanking the active node */}
-      {total > 0 && charPos && (() => {
-        const { x, y } = charPos;
-        return (
-          <>
-            <g className="map-stig" filter="url(#csh)">
-              <image href={`${import.meta.env.BASE_URL}stig.png`} x={x + 20} y={y - 75} width="52" height="64" style={{ mixBlendMode: 'multiply' }} />
-            </g>
-            <g className="map-nina" filter="url(#csh)">
-              <image href={`${import.meta.env.BASE_URL}nina.png`} x={x - 68} y={y - 70} width="48" height="60"
-                transform={`translate(${(x - 68) * 2 + 48}, 0) scale(-1, 1)`}
-                style={{ mixBlendMode: 'multiply' }} />
-            </g>
-          </>
-        );
-      })()}
-
-      {/* Empty state */}
-      {total === 0 && (
-        <text x="170" y="100" textAnchor="middle" fontFamily="Baloo 2,cursive" fontSize="14" fontWeight="800" fill="#5a8fa8">
-          Legg til gjøremål for å starte!
-        </text>
-      )}
     </svg>
   );
 }

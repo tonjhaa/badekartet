@@ -67,13 +67,24 @@ async function loadShop() {
   return (data ?? []) as ShopItem[];
 }
 
+const PROGRESS_TS_KEY = 'badekartet_last_progress';
+
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shopItems, setShopItems] = useState<ShopItem[]>([]);
   const [ready, setReady] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [walkAnim, setWalkAnim] = useState<{ from: number; to: number } | null>(null);
+  const [lastProgressTime, setLastProgressTime] = useState<number>(
+    () => Number(localStorage.getItem(PROGRESS_TS_KEY) ?? 0)
+  );
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function recordProgress() {
+    const now = Date.now();
+    localStorage.setItem(PROGRESS_TS_KEY, String(now));
+    setLastProgressTime(now);
+  }
 
   function celebrateProgress() {
     confetti({ particleCount: 160, spread: 110, origin: { y: 0.5 }, colors: ['#0ABFBC', '#FFD93D', '#FF6B6B', '#90E06A', '#48CAE4'] });
@@ -165,6 +176,7 @@ export default function App() {
       await supabase.from('tasks').update({ done: nowDone }).eq('id', id);
       if (nowDone) {
         celebrate(t.assignee);
+        recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
       }
     }
@@ -192,6 +204,7 @@ export default function App() {
       await supabase.from('shop_items').update({ bought: nowBought }).eq('id', id);
       if (nowBought) {
         celebrate(s.assignee);
+        recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
       }
     }
@@ -245,6 +258,7 @@ export default function App() {
           completedCount={completedCount}
           tasks={tasks}
           shopItems={shopItems}
+          lastProgressTime={lastProgressTime}
           onTaskToggle={handleTaskToggle}
           onTaskSave={handleTaskSave}
           onTaskDelete={handleTaskDelete}
