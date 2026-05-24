@@ -12,12 +12,12 @@ import type { MapItem, Task, ShopItem } from '../types';
 
 type Mood = 'jubler' | 'fornoyd' | 'noytral' | 'irritert' | 'rasende';
 
-const MOOD_OPTIONS: { mood: Mood; emoji: string; label: string }[] = [
-  { mood: 'jubler',   emoji: '🥳', label: 'Jubler' },
-  { mood: 'fornoyd',  emoji: '😄', label: 'Fornøyd' },
-  { mood: 'noytral',  emoji: '😐', label: 'Nøytral' },
-  { mood: 'irritert', emoji: '😠', label: 'Irritert' },
-  { mood: 'rasende',  emoji: '🤬', label: 'Rasende' },
+const MOOD_OPTIONS: { mood: Mood; img: string; label: string }[] = [
+  { mood: 'jubler',   img: 'ane-jubler.png',   label: 'Jubler' },
+  { mood: 'fornoyd',  img: 'ane-fornoyd.png',  label: 'Fornøyd' },
+  { mood: 'noytral',  img: 'ane-noytral.png',  label: 'Nøytral' },
+  { mood: 'irritert', img: 'ane-irritert.png', label: 'Irritert' },
+  { mood: 'rasende',  img: 'ane-rasende.png',  label: 'Rasende' },
 ];
 
 const LEVEL_TITLES = [
@@ -179,13 +179,14 @@ export default function MapPage({
                   <span>↩</span> Auto
                 </button>
               )}
-              {MOOD_OPTIONS.map(({ mood, emoji, label }) => (
+              {MOOD_OPTIONS.map(({ mood, img, label }) => (
                 <button
                   key={mood}
                   className={`mood-picker-option${moodOverride === mood ? ' active' : ''}`}
                   onClick={() => { setMoodOverride(mood); setMoodPickerOpen(false); }}
                 >
-                  <span>{emoji}</span> {label}
+                  <img src={`${import.meta.env.BASE_URL}${img}`} alt={label} className="mood-picker-img" />
+                  {label}
                 </button>
               ))}
             </div>
