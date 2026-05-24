@@ -284,71 +284,28 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
           );
         }
         if (item.done) {
-          const isHovered = hoveredNode === i;
           return (
             <g
               key={item.id}
               onMouseEnter={() => setHoveredNode(i)}
               onMouseLeave={() => setHoveredNode(null)}
-              onClick={() => setHoveredNode(isHovered ? null : i)}
+              onClick={() => setHoveredNode(hoveredNode === i ? null : i)}
               style={{ cursor: 'pointer' }}
             >
-              <circle cx={nx} cy={ny} r={26} fill="#0ABFBC" opacity={0.12} />
-              <circle cx={nx} cy={ny} r={20} fill="#0ABFBC" opacity={0.18} />
-              <circle cx={nx} cy={ny} r={18} fill="#0ABFBC" stroke="white" strokeWidth={3} />
-              <text x={nx} y={ny} textAnchor="middle" dominantBaseline="middle" fontSize={15} fill="white">★</text>
-
-              {isHovered && (
-                <g>
-                  {/* Tooltip bubble */}
-                  <rect
-                    x={nx - 72} y={ny - 64}
-                    width={144} height={50}
-                    rx={10} ry={10}
-                    fill="white"
-                    stroke="#0ABFBC"
-                    strokeWidth={1.5}
-                    filter="drop-shadow(0 2px 6px rgba(0,0,0,0.14))"
-                  />
-                  {/* Callout arrow */}
-                  <polygon
-                    points={`${nx - 7},${ny - 14} ${nx + 7},${ny - 14} ${nx},${ny - 4}`}
-                    fill="white"
-                    stroke="#0ABFBC"
-                    strokeWidth={1.5}
-                    strokeLinejoin="round"
-                  />
-                  {/* Cover the arrow's top stroke line so it blends into rect */}
-                  <line x1={nx - 6} y1={ny - 14} x2={nx + 6} y2={ny - 14} stroke="white" strokeWidth={2} />
-                  <text
-                    x={nx} y={ny - 44}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fontSize={10}
-                    fontWeight="700"
-                    fill="#1A3A5C"
-                    style={{ fontFamily: "'Baloo 2', cursive" }}
-                  >
-                    {item.name.length > 20 ? item.name.slice(0, 19) + '…' : item.name}
-                  </text>
-                  <text
-                    x={nx} y={ny - 26}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fontSize={9}
-                    fill="#0ABFBC"
-                    style={{ fontFamily: "'Baloo 2', cursive" }}
-                  >
-                    {nodePraise(i)}
-                  </text>
-                </g>
-              )}
+              {/* Outer gold glow */}
+              <circle cx={nx} cy={ny} r={31} fill="#FFD93D" opacity={0.22} />
+              {/* Gold ring + teal fill */}
+              <circle cx={nx} cy={ny} r={24} fill="white" stroke="#FFD93D" strokeWidth={3.5} />
+              <circle cx={nx} cy={ny} r={20} fill="#0ABFBC" />
+              {/* Big checkmark */}
+              <text x={nx} y={ny + 1} textAnchor="middle" dominantBaseline="middle"
+                fontSize={21} fontWeight="900" fill="white">✓</text>
             </g>
           );
         }
         return (
-          <g key={item.id} opacity={0.5}>
-            <circle cx={nx} cy={ny} r={16} fill="white" stroke="#b8ccd4" strokeWidth={2} />
+          <g key={item.id} opacity={0.45}>
+            <circle cx={nx} cy={ny} r={15} fill="white" stroke="#b8ccd4" strokeWidth={2} />
           </g>
         );
       })}
@@ -379,6 +336,45 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
           />
         </g>
       </g>
+
+      {/* Tooltip — rendered last so always on top of everything */}
+      {hoveredNode !== null && items[hoveredNode]?.done && (() => {
+        const { x: tx, y: ty } = getPos(hoveredNode);
+        const below = ty < 130;
+        const TW = 162; const TH = 58;
+        const rx = Math.max(4, Math.min(tx - TW / 2, 340 - TW - 4));
+        const ry = below ? ty + 30 : ty - TH - 16;
+        const arrowBase = below ? ry : ry + TH;
+        const arrowTip = below ? ty + 26 : ty - 12;
+        const item = items[hoveredNode];
+        return (
+          <g style={{ pointerEvents: 'none' }}>
+            <rect x={rx} y={ry} width={TW} height={TH} rx={12}
+              fill="white" stroke="#0ABFBC" strokeWidth={2}
+              filter="drop-shadow(0 4px 12px rgba(0,0,0,0.22))" />
+            {/* Arrow */}
+            <polygon
+              points={`${tx - 9},${arrowBase} ${tx + 9},${arrowBase} ${tx},${arrowTip}`}
+              fill="white" stroke="#0ABFBC" strokeWidth={2} strokeLinejoin="round" />
+            <line x1={tx - 8} y1={arrowBase} x2={tx + 8} y2={arrowBase}
+              stroke="white" strokeWidth={3} />
+            {/* ✅ badge */}
+            <text x={rx + 16} y={ry + 22} textAnchor="middle" dominantBaseline="middle" fontSize={16}>✅</text>
+            {/* Task name */}
+            <text x={rx + 30} y={ry + 20} dominantBaseline="middle"
+              fontSize={11} fontWeight="800" fill="#1A3A5C"
+              style={{ fontFamily: "'Baloo 2', cursive" }}>
+              {item.name.length > 18 ? item.name.slice(0, 17) + '…' : item.name}
+            </text>
+            {/* Praise */}
+            <text x={rx + 30} y={ry + 40} dominantBaseline="middle"
+              fontSize={10} fill="#0ABFBC"
+              style={{ fontFamily: "'Baloo 2', cursive" }}>
+              {nodePraise(hoveredNode)}
+            </text>
+          </g>
+        );
+      })()}
     </svg>
   );
 }
