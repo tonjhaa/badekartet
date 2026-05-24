@@ -126,13 +126,14 @@ interface Props {
   lastProgressTime: number;
   pendingTasks: Task[];
   pendingShop: ShopItem[];
+  moodOverride?: Mood | null;
 }
 
-export default function AnePisken({ lastProgressTime, pendingTasks, pendingShop }: Props) {
+export default function AnePisken({ lastProgressTime, pendingTasks, pendingShop, moodOverride }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [closing, setClosing] = useState(false);
   const [imgErr, setImgErr] = useState(false);
-  const mood = getMood(lastProgressTime);
+  const mood = moodOverride ?? getMood(lastProgressTime);
 
   const open = useCallback(() => {
     setMessage(getContextMessage(mood, pendingTasks, pendingShop));
