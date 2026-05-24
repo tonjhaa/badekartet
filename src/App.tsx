@@ -178,6 +178,8 @@ export default function App() {
         celebrate(t.assignee);
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
+      } else {
+        if (!walkAnim && completedCount > 0) setWalkAnim({ from: completedCount, to: completedCount - 1 });
       }
     }
   }
@@ -206,6 +208,8 @@ export default function App() {
         celebrate(s.assignee);
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
+      } else {
+        if (!walkAnim && completedCount > 0) setWalkAnim({ from: completedCount, to: completedCount - 1 });
       }
     }
   }

@@ -105,6 +105,21 @@ const Road = memo(function Road({ d, done }: { d: string; done: boolean }) {
   );
 });
 
+const NODE_PRAISES = [
+  'Godt jobbet! ⭐',
+  'En brikke på plass! 🏆',
+  'Fremover! 🚀',
+  'Knallbra! 💪',
+  'Strålende! ✨',
+  'Stig og Nina leverer! 🎉',
+  'Et steg nærmere nytt bad! 🛁',
+  'Pisken er fornøyd! 😄',
+];
+
+function nodePraise(idx: number) {
+  return NODE_PRAISES[idx % NODE_PRAISES.length];
+}
+
 // --- Main ---
 
 interface Props {
@@ -121,19 +136,20 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
   const stigRef    = useRef<SVGImageElement>(null);
   const ninaGRef   = useRef<SVGGElement>(null);
   const glowRef    = useRef<SVGCircleElement>(null);
-  const animSegRef = useRef<SVGGElement>(null);   // animated new road segment
+  const animSegRef = useRef<SVGGElement>(null);
   const segLenRef  = useRef(0);
   const rafId      = useRef<number | null>(null);
   const [animating, setAnimating] = useState(false);
+  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
+
+  const isReverse = walkAnim ? walkAnim.to < walkAnim.from : false;
 
   useEffect(() => {
     if (!walkAnim || n === 0) return;
-    // walkAnim.from and .to are already node indices (0-based)
     const fromIdx = Math.min(Math.max(walkAnim.from, 0), n - 1);
     const toIdx   = Math.min(Math.max(walkAnim.to,   0), n - 1);
     const p0 = getPos(fromIdx);
     const p3 = getPos(toIdx);
-    // Bezier control points matching makePath — so characters follow the actual road curve
     const my = (p0.y + p3.y) / 2;
     const p1 = { x: p0.x, y: my };
     const p2 = { x: p3.x, y: my };
@@ -143,23 +159,28 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
 
     setAnimating(true);
 
-    // Measure road segment and hide it
     const segs = animSegRef.current
       ? Array.from(animSegRef.current.querySelectorAll('path')).slice(0, 3) as SVGPathElement[]
       : [];
     const len = segs[0]?.getTotalLength() ?? 0;
     segLenRef.current = len;
-    segs.forEach(p => { p.style.strokeDasharray = String(len); p.style.strokeDashoffset = String(len); });
+    // Reverse: start fully drawn (offset=0), animate to hidden (offset=len)
+    // Forward: start hidden (offset=len), animate to fully drawn (offset=0)
+    segs.forEach(p => {
+      p.style.strokeDasharray = String(len);
+      p.style.strokeDashoffset = isReverse ? '0' : String(len);
+    });
 
     function ease(t: number) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
 
     function tick(now: number) {
       const t = Math.min((now - start) / duration, 1);
       const e = ease(t);
-      const mt = 1 - e;
-      // Cubic bezier — characters travel along the same curve as the road
-      const cx = mt*mt*mt*p0.x + 3*mt*mt*e*p1.x + 3*mt*e*e*p2.x + e*e*e*p3.x;
-      const cy = mt*mt*mt*p0.y + 3*mt*mt*e*p1.y + 3*mt*e*e*p2.y + e*e*e*p3.y;
+      // For reverse: characters go from toIdx→fromIdx direction, use (1-e) for bezier param
+      const be = isReverse ? (1 - e) : e;
+      const mt = 1 - be;
+      const cx = mt*mt*mt*p0.x + 3*mt*mt*be*p1.x + 3*mt*be*be*p2.x + be*be*be*p3.x;
+      const cy = mt*mt*mt*p0.y + 3*mt*mt*be*p1.y + 3*mt*be*be*p2.y + be*be*be*p3.y;
 
       stigRef.current?.setAttribute('x', String(cx + 20));
       stigRef.current?.setAttribute('y', String(cy - 75));
@@ -176,7 +197,8 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
       }
 
       if (len > 0) {
-        const offset = String(len * (1 - e));
+        // Forward: dashoffset shrinks (len→0); Reverse: dashoffset grows (0→len)
+        const offset = isReverse ? String(len * e) : String(len * (1 - e));
         segs.forEach(p => { p.style.strokeDashoffset = offset; });
       }
 
@@ -192,19 +214,22 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
     return () => { if (rafId.current) cancelAnimationFrame(rafId.current); };
   }, [walkAnim]);
 
-  // walkAnim.from/to are node indices; rest position = destination (optimistic during walk)
+  // Rest position: during animation show where characters are heading
   const restIdx = walkAnim
-    ? Math.min(walkAnim.to, n - 1)
+    ? (isReverse ? walkAnim.to : Math.min(walkAnim.to, n - 1))
     : Math.min(completedCount, n - 1);
   const rest = n > 0 ? getPos(Math.max(restIdx, 0)) : getPos(0);
 
-  // Freeze done road at walkAnim.from to prevent it jumping ahead during animation
+  // Freeze done road at walkAnim.from to prevent jumping ahead (forward)
+  // For reverse: freeze at walkAnim.from too (the segment being erased is in animSegRef)
   const displayCount = walkAnim != null ? walkAnim.from : completedCount;
   const donePath  = displayCount >= 1 && n >= 2 ? makePath(0, Math.min(displayCount, n - 1)) : '';
   const greyPath  = n >= 2 ? makePath(Math.min(displayCount, n - 1), n - 1) : '';
-  // Animated new segment: from current node to next
-  const newSegPath = walkAnim && walkAnim.from < n - 1
-    ? makePath(walkAnim.from, Math.min(walkAnim.to, n - 1))
+  // Animated segment: always from the lower index to the higher index
+  const segFrom = walkAnim ? Math.min(walkAnim.from, walkAnim.to) : 0;
+  const segTo   = walkAnim ? Math.max(walkAnim.from, walkAnim.to) : 0;
+  const newSegPath = walkAnim && segFrom < n - 1
+    ? makePath(segFrom, Math.min(segTo, n - 1))
     : '';
 
   return (
@@ -236,7 +261,7 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
       <Road d={greyPath} done={false} />
       <Road d={donePath} done />
 
-      {/* Animated new segment — progressively revealed via stroke-dashoffset in RAF */}
+      {/* Animated segment — forward: starts hidden, reveals; reverse: starts visible, hides */}
       {walkAnim && newSegPath && (
         <g ref={animSegRef}>
           <path d={newSegPath} stroke="rgba(0,0,0,0.09)" strokeWidth={26} fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -245,10 +270,9 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
         </g>
       )}
 
-      {/* Nodes — yellow = where characters stand (node completedCount), teal = done, grey = future */}
+      {/* Nodes */}
       {items.map((item, i) => {
         const { x: nx, y: ny } = getPos(i);
-        // Yellow at the node characters are currently at/heading to (no walk in progress)
         const isCurrent = walkAnim == null && i === Math.min(completedCount, n - 1);
         if (isCurrent) {
           return (
@@ -260,12 +284,64 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
           );
         }
         if (item.done) {
+          const isHovered = hoveredNode === i;
           return (
-            <g key={item.id}>
+            <g
+              key={item.id}
+              onMouseEnter={() => setHoveredNode(i)}
+              onMouseLeave={() => setHoveredNode(null)}
+              style={{ cursor: 'pointer' }}
+            >
               <circle cx={nx} cy={ny} r={26} fill="#0ABFBC" opacity={0.12} />
               <circle cx={nx} cy={ny} r={20} fill="#0ABFBC" opacity={0.18} />
               <circle cx={nx} cy={ny} r={18} fill="#0ABFBC" stroke="white" strokeWidth={3} />
               <text x={nx} y={ny} textAnchor="middle" dominantBaseline="middle" fontSize={15} fill="white">★</text>
+
+              {isHovered && (
+                <g>
+                  {/* Tooltip bubble */}
+                  <rect
+                    x={nx - 72} y={ny - 64}
+                    width={144} height={50}
+                    rx={10} ry={10}
+                    fill="white"
+                    stroke="#0ABFBC"
+                    strokeWidth={1.5}
+                    filter="drop-shadow(0 2px 6px rgba(0,0,0,0.14))"
+                  />
+                  {/* Callout arrow */}
+                  <polygon
+                    points={`${nx - 7},${ny - 14} ${nx + 7},${ny - 14} ${nx},${ny - 4}`}
+                    fill="white"
+                    stroke="#0ABFBC"
+                    strokeWidth={1.5}
+                    strokeLinejoin="round"
+                  />
+                  {/* Cover the arrow's top stroke line so it blends into rect */}
+                  <line x1={nx - 6} y1={ny - 14} x2={nx + 6} y2={ny - 14} stroke="white" strokeWidth={2} />
+                  <text
+                    x={nx} y={ny - 44}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontSize={10}
+                    fontWeight="700"
+                    fill="#1A3A5C"
+                    style={{ fontFamily: "'Baloo 2', cursive" }}
+                  >
+                    {item.name.length > 20 ? item.name.slice(0, 19) + '…' : item.name}
+                  </text>
+                  <text
+                    x={nx} y={ny - 26}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontSize={9}
+                    fill="#0ABFBC"
+                    style={{ fontFamily: "'Baloo 2', cursive" }}
+                  >
+                    {nodePraise(i)}
+                  </text>
+                </g>
+              )}
             </g>
           );
         }
@@ -276,7 +352,7 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
         );
       })}
 
-      {/* Walk glow (visibility toggled via state, position via ref) */}
+      {/* Walk glow */}
       <circle
         ref={glowRef}
         cx={rest.x} cy={rest.y + 18} r={28}
@@ -284,7 +360,7 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
         visibility={animating ? 'visible' : 'hidden'}
       />
 
-      {/* Characters (position set via ref during animation) */}
+      {/* Characters */}
       <g style={{ filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.18))' }}>
         <image
           ref={stigRef}

@@ -5,7 +5,7 @@ import type { Task, ShopItem } from '../types';
 type Mood = 'jubler' | 'fornoyd' | 'noytral' | 'irritert' | 'rasende';
 
 function getMood(lastProgressTime: number): Mood {
-  if (!lastProgressTime) return 'rasende';
+  if (!lastProgressTime) return 'noytral'; // fresh start = neutral, not furious
   const hours = (Date.now() - lastProgressTime) / (1000 * 60 * 60);
   if (hours < 1)   return 'jubler';
   if (hours < 24)  return 'fornoyd';
