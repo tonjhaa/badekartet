@@ -16,7 +16,7 @@ function stopIcon(item: MapItem, taskIndex: number) {
 }
 
 function getPos(i: number) {
-  return { x: i % 2 === 0 ? 95 : 245, y: 70 + i * 110 };
+  return { x: i % 2 === 0 ? 95 : 245, y: 130 + i * 110 };
 }
 
 function curvePath(from: { x: number; y: number }, to: { x: number; y: number }) {

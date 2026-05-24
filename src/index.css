@@ -90,10 +90,10 @@ body {
 }
 .header-img-clip {
   overflow: hidden;
-  height: 145px;
+  height: 175px;
 }
 .game-header img.header-bg {
-  width: 100%; height: 145px;
+  width: 100%; height: 175px;
   object-fit: cover; object-position: center 15%;
   display: block;
 }
