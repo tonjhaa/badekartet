@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import type { Task, ShopItem, Assignee } from '../types';
 
 type ModalMode =
-  | { kind: 'task'; item: Task | null; onSave: (t: Omit<Task, 'id' | 'done' | 'created_at'>) => void; onDelete?: () => void }
-  | { kind: 'shop'; item: ShopItem | null; onSave: (s: Omit<ShopItem, 'id' | 'bought' | 'created_at'>) => void; onDelete?: () => void };
+  | { kind: 'task'; item: Task | null; onSave: (t: Omit<Task, 'id' | 'done' | 'created_at' | 'sort_order'>) => void; onDelete?: () => void }
+  | { kind: 'shop'; item: ShopItem | null; onSave: (s: Omit<ShopItem, 'id' | 'bought' | 'created_at' | 'sort_order'>) => void; onDelete?: () => void };
 
 interface Props {
   mode: ModalMode;
@@ -37,6 +37,10 @@ export default function ItemModal({ mode, onClose }: Props) {
     } else if (mode.kind === 'shop' && mode.item) {
       setName(mode.item.name);
       setAssignee(mode.item.assignee);
+      const parsed = parseDeadline(mode.item.deadline ?? '');
+      setDeadlineMode(parsed.mode);
+      setDeadlineDate(parsed.date);
+      setDeadlineWeek(parsed.week);
     } else {
       setName(''); setAssignee('Begge');
       setDeadlineMode('date'); setDeadlineDate(''); setDeadlineWeek('');
@@ -58,7 +62,7 @@ export default function ItemModal({ mode, onClose }: Props) {
     if (mode.kind === 'task') {
       mode.onSave({ name: name.trim(), assignee, deadline: getDeadlineValue() });
     } else {
-      mode.onSave({ name: name.trim(), assignee });
+      mode.onSave({ name: name.trim(), assignee, deadline: getDeadlineValue() });
     }
     onClose();
   }
@@ -96,9 +100,9 @@ export default function ItemModal({ mode, onClose }: Props) {
           </select>
         </div>
 
-        {mode.kind === 'task' && (
+        {(mode.kind === 'task' || mode.kind === 'shop') && (
           <div className="field">
-            <label>Frist</label>
+            <label>{mode.kind === 'task' ? 'Frist' : 'Kjøpes innen'}</label>
             <div className="deadline-toggle">
               <button
                 type="button"

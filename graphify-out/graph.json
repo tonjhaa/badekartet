@@ -1,0 +1,2353 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "id": "package_json",
+      "community": 2,
+      "norm_label": "package.json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "id": "badekartet_package_name",
+      "community": 2,
+      "norm_label": "name"
+    },
+    {
+      "label": "private",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "id": "badekartet_package_private",
+      "community": 2,
+      "norm_label": "private"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "id": "badekartet_package_version",
+      "community": 2,
+      "norm_label": "version"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "id": "badekartet_package_type",
+      "community": 2,
+      "norm_label": "type"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "id": "badekartet_package_scripts",
+      "community": 2,
+      "norm_label": "scripts"
+    },
+    {
+      "label": "dev",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "id": "badekartet_package_scripts_dev",
+      "community": 2,
+      "norm_label": "dev"
+    },
+    {
+      "label": "build",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "id": "badekartet_package_scripts_build",
+      "community": 2,
+      "norm_label": "build"
+    },
+    {
+      "label": "preview",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "id": "badekartet_package_scripts_preview",
+      "community": 2,
+      "norm_label": "preview"
+    },
+    {
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "id": "badekartet_package_dependencies",
+      "community": 2,
+      "norm_label": "dependencies"
+    },
+    {
+      "label": "@supabase/supabase-js",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "id": "badekartet_package_dependencies_supabase_supabase_js",
+      "community": 2,
+      "norm_label": "@supabase/supabase-js"
+    },
+    {
+      "label": "canvas-confetti",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "id": "badekartet_package_dependencies_canvas_confetti",
+      "community": 2,
+      "norm_label": "canvas-confetti"
+    },
+    {
+      "label": "react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "id": "badekartet_package_dependencies_react",
+      "community": 2,
+      "norm_label": "react"
+    },
+    {
+      "label": "react-dom",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "id": "badekartet_package_dependencies_react_dom",
+      "community": 2,
+      "norm_label": "react-dom"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "id": "badekartet_package_devdependencies",
+      "community": 6,
+      "norm_label": "devdependencies"
+    },
+    {
+      "label": "@types/canvas-confetti",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L18",
+      "id": "badekartet_package_devdependencies_types_canvas_confetti",
+      "community": 6,
+      "norm_label": "@types/canvas-confetti"
+    },
+    {
+      "label": "@types/react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L19",
+      "id": "badekartet_package_devdependencies_types_react",
+      "community": 6,
+      "norm_label": "@types/react"
+    },
+    {
+      "label": "@types/react-dom",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L20",
+      "id": "badekartet_package_devdependencies_types_react_dom",
+      "community": 6,
+      "norm_label": "@types/react-dom"
+    },
+    {
+      "label": "@vitejs/plugin-react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L21",
+      "id": "badekartet_package_devdependencies_vitejs_plugin_react",
+      "community": 6,
+      "norm_label": "@vitejs/plugin-react"
+    },
+    {
+      "label": "typescript",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L22",
+      "id": "badekartet_package_devdependencies_typescript",
+      "community": 6,
+      "norm_label": "typescript"
+    },
+    {
+      "label": "vite",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "id": "badekartet_package_devdependencies_vite",
+      "community": 6,
+      "norm_label": "vite"
+    },
+    {
+      "label": "tsconfig.json",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L1",
+      "id": "tsconfig_json",
+      "community": 1,
+      "norm_label": "tsconfig.json"
+    },
+    {
+      "label": "compilerOptions",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L2",
+      "id": "badekartet_tsconfig_compileroptions",
+      "community": 1,
+      "norm_label": "compileroptions"
+    },
+    {
+      "label": "target",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L3",
+      "id": "badekartet_tsconfig_compileroptions_target",
+      "community": 1,
+      "norm_label": "target"
+    },
+    {
+      "label": "useDefineForClassFields",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L4",
+      "id": "badekartet_tsconfig_compileroptions_usedefineforclassfields",
+      "community": 1,
+      "norm_label": "usedefineforclassfields"
+    },
+    {
+      "label": "lib",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L5",
+      "id": "badekartet_tsconfig_compileroptions_lib",
+      "community": 1,
+      "norm_label": "lib"
+    },
+    {
+      "label": "module",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "id": "badekartet_tsconfig_compileroptions_module",
+      "community": 1,
+      "norm_label": "module"
+    },
+    {
+      "label": "skipLibCheck",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L7",
+      "id": "badekartet_tsconfig_compileroptions_skiplibcheck",
+      "community": 1,
+      "norm_label": "skiplibcheck"
+    },
+    {
+      "label": "moduleResolution",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L8",
+      "id": "badekartet_tsconfig_compileroptions_moduleresolution",
+      "community": 1,
+      "norm_label": "moduleresolution"
+    },
+    {
+      "label": "allowImportingTsExtensions",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L9",
+      "id": "badekartet_tsconfig_compileroptions_allowimportingtsextensions",
+      "community": 1,
+      "norm_label": "allowimportingtsextensions"
+    },
+    {
+      "label": "isolatedModules",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L10",
+      "id": "badekartet_tsconfig_compileroptions_isolatedmodules",
+      "community": 1,
+      "norm_label": "isolatedmodules"
+    },
+    {
+      "label": "moduleDetection",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L11",
+      "id": "badekartet_tsconfig_compileroptions_moduledetection",
+      "community": 1,
+      "norm_label": "moduledetection"
+    },
+    {
+      "label": "noEmit",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L12",
+      "id": "badekartet_tsconfig_compileroptions_noemit",
+      "community": 1,
+      "norm_label": "noemit"
+    },
+    {
+      "label": "jsx",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L13",
+      "id": "badekartet_tsconfig_compileroptions_jsx",
+      "community": 1,
+      "norm_label": "jsx"
+    },
+    {
+      "label": "strict",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L14",
+      "id": "badekartet_tsconfig_compileroptions_strict",
+      "community": 1,
+      "norm_label": "strict"
+    },
+    {
+      "label": "include",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L16",
+      "id": "badekartet_tsconfig_include",
+      "community": 1,
+      "norm_label": "include"
+    },
+    {
+      "label": "vite.config.ts",
+      "file_type": "code",
+      "source_file": "vite.config.ts",
+      "source_location": "L1",
+      "id": "vite_config_ts",
+      "community": 10,
+      "norm_label": "vite.config.ts"
+    },
+    {
+      "label": "settings.local.json",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L1",
+      "id": "claude_settings_local_json",
+      "community": 7,
+      "norm_label": "settings.local.json"
+    },
+    {
+      "label": "permissions",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L2",
+      "id": "claude_settings_local_permissions",
+      "community": 7,
+      "norm_label": "permissions"
+    },
+    {
+      "label": "allow",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L3",
+      "id": "claude_settings_local_permissions_allow",
+      "community": 7,
+      "norm_label": "allow"
+    },
+    {
+      "label": "App.tsx",
+      "file_type": "code",
+      "source_file": "src/App.tsx",
+      "source_location": "L1",
+      "id": "src_app_tsx",
+      "community": 0,
+      "norm_label": "app.tsx"
+    },
+    {
+      "label": "DEFAULT_TASKS",
+      "file_type": "code",
+      "source_file": "src/App.tsx",
+      "source_location": "L8",
+      "id": "src_app_default_tasks",
+      "community": 0,
+      "norm_label": "default_tasks"
+    },
+    {
+      "label": "DEFAULT_SHOP",
+      "file_type": "code",
+      "source_file": "src/App.tsx",
+      "source_location": "L17",
+      "id": "src_app_default_shop",
+      "community": 0,
+      "norm_label": "default_shop"
+    },
+    {
+      "label": "uid()",
+      "file_type": "code",
+      "source_file": "src/App.tsx",
+      "source_location": "L28",
+      "id": "src_app_uid",
+      "community": 0,
+      "norm_label": "uid()"
+    },
+    {
+      "label": "loadTasks()",
+      "file_type": "code",
+      "source_file": "src/App.tsx",
+      "source_location": "L30",
+      "id": "src_app_loadtasks",
+      "community": 0,
+      "norm_label": "loadtasks()"
+    },
+    {
+      "label": "loadShop()",
+      "file_type": "code",
+      "source_file": "src/App.tsx",
+      "source_location": "L35",
+      "id": "src_app_loadshop",
+      "community": 0,
+      "norm_label": "loadshop()"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "src/App.tsx",
+      "source_location": "L40",
+      "id": "src_app_app",
+      "community": 0,
+      "norm_label": "app()"
+    },
+    {
+      "label": "main.tsx",
+      "file_type": "code",
+      "source_file": "src/main.tsx",
+      "source_location": "L1",
+      "id": "src_main_tsx",
+      "community": 0,
+      "norm_label": "main.tsx"
+    },
+    {
+      "label": "types.ts",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L1",
+      "id": "src_types_ts",
+      "community": 0,
+      "norm_label": "types.ts"
+    },
+    {
+      "label": "Assignee",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L1",
+      "id": "src_types_assignee",
+      "community": 0,
+      "norm_label": "assignee"
+    },
+    {
+      "label": "Task",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L3",
+      "id": "src_types_task",
+      "community": 0,
+      "norm_label": "task"
+    },
+    {
+      "label": "ShopItem",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L12",
+      "id": "src_types_shopitem",
+      "community": 0,
+      "norm_label": "shopitem"
+    },
+    {
+      "label": "MapItem",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L20",
+      "id": "src_types_mapitem",
+      "community": 5,
+      "norm_label": "mapitem"
+    },
+    {
+      "label": "vite-env.d.ts",
+      "file_type": "code",
+      "source_file": "src/vite-env.d.ts",
+      "source_location": "L1",
+      "id": "src_vite_env_d_ts",
+      "community": 8,
+      "norm_label": "vite-env.d.ts"
+    },
+    {
+      "label": "ImportMetaEnv",
+      "file_type": "code",
+      "source_file": "src/vite-env.d.ts",
+      "source_location": "L3",
+      "id": "src_vite_env_d_importmetaenv",
+      "community": 8,
+      "norm_label": "importmetaenv"
+    },
+    {
+      "label": "ImportMeta",
+      "file_type": "code",
+      "source_file": "src/vite-env.d.ts",
+      "source_location": "L8",
+      "id": "src_vite_env_d_importmeta",
+      "community": 8,
+      "norm_label": "importmeta"
+    },
+    {
+      "label": "ItemModal.tsx",
+      "file_type": "code",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L1",
+      "id": "src_components_itemmodal_tsx",
+      "community": 0,
+      "norm_label": "itemmodal.tsx"
+    },
+    {
+      "label": "ModalMode",
+      "file_type": "code",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L4",
+      "id": "components_itemmodal_modalmode",
+      "community": 0,
+      "norm_label": "modalmode"
+    },
+    {
+      "label": "Props",
+      "file_type": "code",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L8",
+      "id": "components_itemmodal_props",
+      "community": 0,
+      "norm_label": "props"
+    },
+    {
+      "label": "ItemModal()",
+      "file_type": "code",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L13",
+      "id": "components_itemmodal_itemmodal",
+      "community": 0,
+      "norm_label": "itemmodal()"
+    },
+    {
+      "label": "DynamicMap.tsx",
+      "file_type": "code",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L1",
+      "id": "src_components_dynamicmap_tsx",
+      "community": 5,
+      "norm_label": "dynamicmap.tsx"
+    },
+    {
+      "label": "STOP_ICONS",
+      "file_type": "code",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L3",
+      "id": "components_dynamicmap_stop_icons",
+      "community": 5,
+      "norm_label": "stop_icons"
+    },
+    {
+      "label": "stopIcon()",
+      "file_type": "code",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L13",
+      "id": "components_dynamicmap_stopicon",
+      "community": 5,
+      "norm_label": "stopicon()"
+    },
+    {
+      "label": "getPos()",
+      "file_type": "code",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L18",
+      "id": "components_dynamicmap_getpos",
+      "community": 5,
+      "norm_label": "getpos()"
+    },
+    {
+      "label": "curvePath()",
+      "file_type": "code",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L22",
+      "id": "components_dynamicmap_curvepath",
+      "community": 5,
+      "norm_label": "curvepath()"
+    },
+    {
+      "label": "Props",
+      "file_type": "code",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L27",
+      "id": "components_dynamicmap_props",
+      "community": 5,
+      "norm_label": "props"
+    },
+    {
+      "label": "DynamicMap()",
+      "file_type": "code",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L32",
+      "id": "components_dynamicmap_dynamicmap",
+      "community": 5,
+      "norm_label": "dynamicmap()"
+    },
+    {
+      "label": "TasksPage.tsx",
+      "file_type": "code",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L1",
+      "id": "src_components_taskspage_tsx",
+      "community": 0,
+      "norm_label": "taskspage.tsx"
+    },
+    {
+      "label": "Modal",
+      "file_type": "code",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L5",
+      "id": "components_taskspage_modal",
+      "community": 0,
+      "norm_label": "modal"
+    },
+    {
+      "label": "Props",
+      "file_type": "code",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L10",
+      "id": "components_taskspage_props",
+      "community": 0,
+      "norm_label": "props"
+    },
+    {
+      "label": "TasksPage()",
+      "file_type": "code",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L21",
+      "id": "components_taskspage_taskspage",
+      "community": 0,
+      "norm_label": "taskspage()"
+    },
+    {
+      "label": "MapPage.tsx",
+      "file_type": "code",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L1",
+      "id": "src_components_mappage_tsx",
+      "community": 5,
+      "norm_label": "mappage.tsx"
+    },
+    {
+      "label": "LEVEL_TITLES",
+      "file_type": "code",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L4",
+      "id": "components_mappage_level_titles",
+      "community": 5,
+      "norm_label": "level_titles"
+    },
+    {
+      "label": "levelTitle()",
+      "file_type": "code",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L13",
+      "id": "components_mappage_leveltitle",
+      "community": 5,
+      "norm_label": "leveltitle()"
+    },
+    {
+      "label": "Props",
+      "file_type": "code",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L22",
+      "id": "components_mappage_props",
+      "community": 5,
+      "norm_label": "props"
+    },
+    {
+      "label": "MapPage()",
+      "file_type": "code",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L24",
+      "id": "components_mappage_mappage",
+      "community": 5,
+      "norm_label": "mappage()"
+    },
+    {
+      "label": "useLocalStorage.ts",
+      "file_type": "code",
+      "source_file": "src/hooks/useLocalStorage.ts",
+      "source_location": "L1",
+      "id": "src_hooks_uselocalstorage_ts",
+      "community": 9,
+      "norm_label": "uselocalstorage.ts"
+    },
+    {
+      "label": "useLocalStorage()",
+      "file_type": "code",
+      "source_file": "src/hooks/useLocalStorage.ts",
+      "source_location": "L3",
+      "id": "hooks_uselocalstorage_uselocalstorage",
+      "community": 9,
+      "norm_label": "uselocalstorage()"
+    },
+    {
+      "label": "supabase.ts",
+      "file_type": "code",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L1",
+      "id": "src_lib_supabase_ts",
+      "community": 0,
+      "norm_label": "supabase.ts"
+    },
+    {
+      "label": "supabase",
+      "file_type": "code",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L3",
+      "id": "lib_supabase_supabase",
+      "community": 0,
+      "norm_label": "supabase"
+    },
+    {
+      "label": "index.html - App Entry Point",
+      "file_type": "code",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_index_html",
+      "community": 3,
+      "norm_label": "index.html - app entry point"
+    },
+    {
+      "label": "React App Root (div#root)",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "line 12",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_index_react_root",
+      "community": 3,
+      "norm_label": "react app root (div#root)"
+    },
+    {
+      "label": "Fredoka Font (Google Fonts)",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_index_font_fredoka",
+      "community": 3,
+      "norm_label": "fredoka font (google fonts)"
+    },
+    {
+      "label": "Baloo 2 Font (Google Fonts)",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_index_font_baloo2",
+      "community": 3,
+      "norm_label": "baloo 2 font (google fonts)"
+    },
+    {
+      "label": "Font Awesome 6.5 Icons (CDN)",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_index_font_awesome",
+      "community": 3,
+      "norm_label": "font awesome 6.5 icons (cdn)"
+    },
+    {
+      "label": "Norwegian Language (lang=no)",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "line 2",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_index_lang_no",
+      "community": 3,
+      "norm_label": "norwegian language (lang=no)"
+    },
+    {
+      "label": "GitHub Actions Deploy Workflow",
+      "file_type": "document",
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_deploy_yml",
+      "community": 3,
+      "norm_label": "github actions deploy workflow"
+    },
+    {
+      "label": "GitHub Pages Deployment Target",
+      "file_type": "concept",
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 19-21",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_deploy_github_pages",
+      "community": 3,
+      "norm_label": "github pages deployment target"
+    },
+    {
+      "label": "Node.js 20 Build Environment",
+      "file_type": "concept",
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 26-27",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_deploy_node20",
+      "community": 3,
+      "norm_label": "node.js 20 build environment"
+    },
+    {
+      "label": "VITE_SUPABASE_URL Secret",
+      "file_type": "concept",
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 34",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_deploy_supabase_url_secret",
+      "community": 3,
+      "norm_label": "vite_supabase_url secret"
+    },
+    {
+      "label": "VITE_SUPABASE_ANON_KEY Secret",
+      "file_type": "concept",
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 35",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_deploy_supabase_anon_key_secret",
+      "community": 3,
+      "norm_label": "vite_supabase_anon_key secret"
+    },
+    {
+      "label": "Supabase Backend Integration",
+      "file_type": "concept",
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 33-35",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_deploy_supabase_integration",
+      "community": 3,
+      "norm_label": "supabase backend integration"
+    },
+    {
+      "label": "Stig - Cartoon Character Game Piece",
+      "file_type": "image",
+      "source_file": "stig.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_stig_png",
+      "community": 4,
+      "norm_label": "stig - cartoon character game piece"
+    },
+    {
+      "label": "Stig Character Description: cheerful cartoon man with grey hair and glasses, wearing a light blue shirt and jeans, holding a yellow paint roller and waving; 3D illustrated style used as a game piece on the progress map",
+      "file_type": "rationale",
+      "source_file": "stig.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_stig_character_desc",
+      "community": 4,
+      "norm_label": "stig character description: cheerful cartoon man with grey hair and glasses, wearing a light blue shirt and jeans, holding a yellow paint roller and waving; 3d illustrated style used as a game piece on the progress map"
+    },
+    {
+      "label": "Nina - Cartoon Character Game Piece",
+      "file_type": "image",
+      "source_file": "nina.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_nina_png",
+      "community": 4,
+      "norm_label": "nina - cartoon character game piece"
+    },
+    {
+      "label": "Nina Character Description: cheerful cartoon girl/young woman with brown hair in a ponytail and round glasses, wearing denim overalls and a white shirt, holding a red screwdriver and pointing; 3D illustrated style used as a game piece on the progress map",
+      "file_type": "rationale",
+      "source_file": "nina.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_nina_character_desc",
+      "community": 4,
+      "norm_label": "nina character description: cheerful cartoon girl/young woman with brown hair in a ponytail and round glasses, wearing denim overalls and a white shirt, holding a red screwdriver and pointing; 3d illustrated style used as a game piece on the progress map"
+    },
+    {
+      "label": "Badekartet App Header Logo",
+      "file_type": "image",
+      "source_file": "header.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_header_png",
+      "community": 4,
+      "norm_label": "badekartet app header logo"
+    },
+    {
+      "label": "Header Description: colorful Candy Crush-style banner with the title 'BADEKARTET' in bold bubble letters and subtitle 'Nina og Stigs vei mot nytt bad!' (Nina and Stig's road to a new bathroom!); surrounded by bathroom-themed icons (rubber duck, showerhead, tiles, cleaning products, bubbles) on a winding road motif",
+      "file_type": "rationale",
+      "source_file": "header.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "badekartet_header_desc",
+      "community": 4,
+      "norm_label": "header description: colorful candy crush-style banner with the title 'badekartet' in bold bubble letters and subtitle 'nina og stigs vei mot nytt bad!' (nina and stig's road to a new bathroom!); surrounded by bathroom-themed icons (rubber duck, showerhead, tiles, cleaning products, bubbles) on a winding road motif"
+    },
+    {
+      "label": "Stig Character Image (public/)",
+      "file_type": "image",
+      "source_file": "public/stig.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "public_stig_png",
+      "community": 4,
+      "norm_label": "stig character image (public/)"
+    },
+    {
+      "label": "Nina Character Image (public/)",
+      "file_type": "image",
+      "source_file": "public/nina.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "public_nina_png",
+      "community": 4,
+      "norm_label": "nina character image (public/)"
+    },
+    {
+      "label": "Badekartet Header Logo (public/)",
+      "file_type": "image",
+      "source_file": "public/header.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "public_header_png",
+      "community": 4,
+      "norm_label": "badekartet header logo (public/)"
+    },
+    {
+      "label": "Badekartet - Norwegian Bathroom Renovation Tracker App",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_badekartet_app",
+      "community": 4,
+      "norm_label": "badekartet - norwegian bathroom renovation tracker app"
+    },
+    {
+      "label": "Stig - Renovator (co-owner of project)",
+      "file_type": "concept",
+      "source_file": "header.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_stig_person",
+      "community": 4,
+      "norm_label": "stig - renovator (co-owner of project)"
+    },
+    {
+      "label": "Nina - Renovator (co-owner of project)",
+      "file_type": "concept",
+      "source_file": "header.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_nina_person",
+      "community": 4,
+      "norm_label": "nina - renovator (co-owner of project)"
+    },
+    {
+      "label": "Candy Crush-style Progress Map UI Pattern",
+      "file_type": "concept",
+      "source_file": "header.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_candy_crush_map",
+      "community": 4,
+      "norm_label": "candy crush-style progress map ui pattern"
+    },
+    {
+      "label": "React + Vite + TypeScript Tech Stack",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "line 13",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_vite_react_ts",
+      "community": 3,
+      "norm_label": "react + vite + typescript tech stack"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "badekartet_package_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "badekartet_package_private",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "badekartet_package_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "badekartet_package_type",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "badekartet_package_scripts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "badekartet_package_dependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "badekartet_package_devdependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "badekartet_package_scripts",
+      "target": "badekartet_package_scripts_dev",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "badekartet_package_scripts",
+      "target": "badekartet_package_scripts_build",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "badekartet_package_scripts",
+      "target": "badekartet_package_scripts_preview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "badekartet_package_dependencies",
+      "target": "badekartet_package_dependencies_supabase_supabase_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "badekartet_package_dependencies",
+      "target": "badekartet_package_dependencies_canvas_confetti",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "badekartet_package_dependencies",
+      "target": "badekartet_package_dependencies_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "badekartet_package_dependencies",
+      "target": "badekartet_package_dependencies_react_dom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "badekartet_package_devdependencies",
+      "target": "badekartet_package_devdependencies_types_canvas_confetti",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "badekartet_package_devdependencies",
+      "target": "badekartet_package_devdependencies_types_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "badekartet_package_devdependencies",
+      "target": "badekartet_package_devdependencies_types_react_dom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "badekartet_package_devdependencies",
+      "target": "badekartet_package_devdependencies_vitejs_plugin_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "badekartet_package_devdependencies",
+      "target": "badekartet_package_devdependencies_typescript",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "badekartet_package_devdependencies",
+      "target": "badekartet_package_devdependencies_vite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "tsconfig_json",
+      "target": "badekartet_tsconfig_compileroptions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "tsconfig_json",
+      "target": "badekartet_tsconfig_include",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_target",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_usedefineforclassfields",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_lib",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_skiplibcheck",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_moduleresolution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_allowimportingtsextensions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_isolatedmodules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_moduledetection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_noemit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_jsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "badekartet_tsconfig_compileroptions",
+      "target": "badekartet_tsconfig_compileroptions_strict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "claude_settings_local_json",
+      "target": "claude_settings_local_permissions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "claude_settings_local_permissions",
+      "target": "claude_settings_local_permissions_allow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_lib_supabase_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_types_task",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_types_shopitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_types_mapitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_components_mappage_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_components_taskspage_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_app_default_tasks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_app_default_shop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_app_uid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_app_loadtasks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_app_loadshop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "src_app_tsx",
+      "target": "src_app_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_main_tsx",
+      "target": "src_app_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/types.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_types_ts",
+      "target": "src_types_assignee",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/types.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_types_ts",
+      "target": "src_types_task",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/types.ts",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_types_ts",
+      "target": "src_types_shopitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/types.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "src_types_ts",
+      "target": "src_types_mapitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_components_itemmodal_tsx",
+      "target": "src_types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_components_dynamicmap_tsx",
+      "target": "src_types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_components_taskspage_tsx",
+      "target": "src_types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_components_mappage_tsx",
+      "target": "src_types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_components_itemmodal_tsx",
+      "target": "src_types_assignee",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_components_itemmodal_tsx",
+      "target": "src_types_task",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_components_taskspage_tsx",
+      "target": "src_types_task",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_components_itemmodal_tsx",
+      "target": "src_types_shopitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_components_taskspage_tsx",
+      "target": "src_types_shopitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_components_dynamicmap_tsx",
+      "target": "src_types_mapitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_components_mappage_tsx",
+      "target": "src_types_mapitem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vite-env.d.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_vite_env_d_ts",
+      "target": "src_vite_env_d_importmetaenv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/vite-env.d.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_vite_env_d_ts",
+      "target": "src_vite_env_d_importmeta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_components_itemmodal_tsx",
+      "target": "components_itemmodal_modalmode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_components_itemmodal_tsx",
+      "target": "components_itemmodal_props",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/ItemModal.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_components_itemmodal_tsx",
+      "target": "components_itemmodal_itemmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_components_taskspage_tsx",
+      "target": "src_components_itemmodal_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_components_dynamicmap_tsx",
+      "target": "components_dynamicmap_stop_icons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_components_dynamicmap_tsx",
+      "target": "components_dynamicmap_stopicon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_components_dynamicmap_tsx",
+      "target": "components_dynamicmap_getpos",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "src_components_dynamicmap_tsx",
+      "target": "components_dynamicmap_curvepath",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "src_components_dynamicmap_tsx",
+      "target": "components_dynamicmap_props",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "src_components_dynamicmap_tsx",
+      "target": "components_dynamicmap_dynamicmap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_components_mappage_tsx",
+      "target": "src_components_dynamicmap_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/DynamicMap.tsx",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "components_dynamicmap_dynamicmap",
+      "target": "components_dynamicmap_getpos",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_components_taskspage_tsx",
+      "target": "components_taskspage_modal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "src_components_taskspage_tsx",
+      "target": "components_taskspage_props",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/TasksPage.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_components_taskspage_tsx",
+      "target": "components_taskspage_taskspage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_components_mappage_tsx",
+      "target": "components_mappage_level_titles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_components_mappage_tsx",
+      "target": "components_mappage_leveltitle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "src_components_mappage_tsx",
+      "target": "components_mappage_props",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "src_components_mappage_tsx",
+      "target": "components_mappage_mappage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/MapPage.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "components_mappage_mappage",
+      "target": "components_mappage_leveltitle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/hooks/useLocalStorage.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_hooks_uselocalstorage_ts",
+      "target": "hooks_uselocalstorage_uselocalstorage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_lib_supabase_ts",
+      "target": "lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "is_entry_point_of",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "badekartet_index_html",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 12",
+      "weight": 1.0,
+      "source": "badekartet_index_html",
+      "target": "badekartet_index_react_root"
+    },
+    {
+      "relation": "loads_font",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 8",
+      "weight": 1.0,
+      "source": "badekartet_index_html",
+      "target": "badekartet_index_font_fredoka"
+    },
+    {
+      "relation": "loads_font",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 8",
+      "weight": 1.0,
+      "source": "badekartet_index_html",
+      "target": "badekartet_index_font_baloo2"
+    },
+    {
+      "relation": "loads_icon_library",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 9",
+      "weight": 1.0,
+      "source": "badekartet_index_html",
+      "target": "badekartet_index_font_awesome"
+    },
+    {
+      "relation": "declares_language",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 2",
+      "weight": 1.0,
+      "source": "badekartet_index_html",
+      "target": "badekartet_index_lang_no"
+    },
+    {
+      "relation": "bootstraps",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 13",
+      "weight": 1.0,
+      "source": "badekartet_index_html",
+      "target": "concept_vite_react_ts"
+    },
+    {
+      "relation": "deploys",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "badekartet_deploy_yml",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "deploys_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 19-21",
+      "weight": 1.0,
+      "source": "badekartet_deploy_yml",
+      "target": "badekartet_deploy_github_pages"
+    },
+    {
+      "relation": "uses_build_environment",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 26-27",
+      "weight": 1.0,
+      "source": "badekartet_deploy_yml",
+      "target": "badekartet_deploy_node20"
+    },
+    {
+      "relation": "injects_secret",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 34",
+      "weight": 1.0,
+      "source": "badekartet_deploy_yml",
+      "target": "badekartet_deploy_supabase_url_secret"
+    },
+    {
+      "relation": "injects_secret",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 35",
+      "weight": 1.0,
+      "source": "badekartet_deploy_yml",
+      "target": "badekartet_deploy_supabase_anon_key_secret"
+    },
+    {
+      "relation": "builds",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 32-36",
+      "weight": 1.0,
+      "source": "badekartet_deploy_yml",
+      "target": "concept_vite_react_ts"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 33-35",
+      "weight": 1.0,
+      "source": "badekartet_deploy_supabase_url_secret",
+      "target": "badekartet_deploy_supabase_integration"
+    },
+    {
+      "relation": "configures",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": "line 33-35",
+      "weight": 1.0,
+      "source": "badekartet_deploy_supabase_anon_key_secret",
+      "target": "badekartet_deploy_supabase_integration"
+    },
+    {
+      "relation": "backend_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": ".github/workflows/deploy.yml",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "badekartet_deploy_supabase_integration",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "described_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "stig.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "badekartet_stig_png",
+      "target": "badekartet_stig_character_desc"
+    },
+    {
+      "relation": "represents",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "stig.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "badekartet_stig_png",
+      "target": "concept_stig_person"
+    },
+    {
+      "relation": "used_as_game_piece_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "stig.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "badekartet_stig_png",
+      "target": "concept_candy_crush_map"
+    },
+    {
+      "relation": "duplicate_of",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/stig.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "public_stig_png",
+      "target": "badekartet_stig_png"
+    },
+    {
+      "relation": "described_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "nina.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "badekartet_nina_png",
+      "target": "badekartet_nina_character_desc"
+    },
+    {
+      "relation": "represents",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "nina.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "badekartet_nina_png",
+      "target": "concept_nina_person"
+    },
+    {
+      "relation": "used_as_game_piece_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "nina.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "badekartet_nina_png",
+      "target": "concept_candy_crush_map"
+    },
+    {
+      "relation": "duplicate_of",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/nina.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "public_nina_png",
+      "target": "badekartet_nina_png"
+    },
+    {
+      "relation": "described_by",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "header.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "badekartet_header_png",
+      "target": "badekartet_header_desc"
+    },
+    {
+      "relation": "is_header_logo_of",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "header.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "badekartet_header_png",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "header.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "badekartet_header_png",
+      "target": "concept_nina_person"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "header.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "badekartet_header_png",
+      "target": "concept_stig_person"
+    },
+    {
+      "relation": "duplicate_of",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/header.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "public_header_png",
+      "target": "badekartet_header_png"
+    },
+    {
+      "relation": "static_asset_of",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/stig.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "public_stig_png",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "static_asset_of",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/nina.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "public_nina_png",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "static_asset_of",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/header.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "public_header_png",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "is_subject_of",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "header.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concept_nina_person",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "is_subject_of",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "header.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concept_stig_person",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "ui_pattern_of",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "header.png",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "concept_candy_crush_map",
+      "target": "concept_badekartet_app"
+    },
+    {
+      "relation": "tech_stack_of",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "index.html",
+      "source_location": "line 13",
+      "weight": 0.95,
+      "source": "concept_vite_react_ts",
+      "target": "concept_badekartet_app"
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "2804fa8f02d905de2893251dce5317c0feb62872"
+}

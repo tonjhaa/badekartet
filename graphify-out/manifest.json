@@ -1,0 +1,112 @@
+{
+  "/Users/tonjeharstad/Projects/Badekartet/package.json": {
+    "mtime": 1779577317.8379874,
+    "ast_hash": "a95f81828b632467b175e921a7285c98",
+    "semantic_hash": "a95f81828b632467b175e921a7285c98"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/tsconfig.json": {
+    "mtime": 1779576644.996923,
+    "ast_hash": "ec4ef92222b0c85ceda55ebb15f86900",
+    "semantic_hash": "ec4ef92222b0c85ceda55ebb15f86900"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/vite.config.ts": {
+    "mtime": 1779577515.2816556,
+    "ast_hash": "4162690cd5e6dc1eb295ef8572b15e71",
+    "semantic_hash": "4162690cd5e6dc1eb295ef8572b15e71"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/.claude/settings.local.json": {
+    "mtime": 1779578809.3266327,
+    "ast_hash": "6f0c33330c24c7043f60612914ba19f8",
+    "semantic_hash": "6f0c33330c24c7043f60612914ba19f8"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/App.tsx": {
+    "mtime": 1779577363.510488,
+    "ast_hash": "7e8053540c6c4f683f19f26a6adb528c",
+    "semantic_hash": "7e8053540c6c4f683f19f26a6adb528c"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/main.tsx": {
+    "mtime": 1779576844.6229653,
+    "ast_hash": "787e5a07efeb2bf6209d5937195f2f68",
+    "semantic_hash": "787e5a07efeb2bf6209d5937195f2f68"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/types.ts": {
+    "mtime": 1779577334.8426368,
+    "ast_hash": "07bf39e7e9685e15d57b996b36bad9fb",
+    "semantic_hash": "07bf39e7e9685e15d57b996b36bad9fb"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/vite-env.d.ts": {
+    "mtime": 1779577382.6558704,
+    "ast_hash": "8fc67744c3d431693763ec3a0f9fdf9e",
+    "semantic_hash": "8fc67744c3d431693763ec3a0f9fdf9e"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/components/ItemModal.tsx": {
+    "mtime": 1779577373.6347294,
+    "ast_hash": "22a10daa78f37c8b48868d1185f3b1d1",
+    "semantic_hash": "22a10daa78f37c8b48868d1185f3b1d1"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/components/DynamicMap.tsx": {
+    "mtime": 1779576770.2977335,
+    "ast_hash": "5f0772ef938452d119705c418b42324e",
+    "semantic_hash": "5f0772ef938452d119705c418b42324e"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/components/TasksPage.tsx": {
+    "mtime": 1779577368.9386141,
+    "ast_hash": "9d8971061eb6859145b7f1804ae4ff5a",
+    "semantic_hash": "9d8971061eb6859145b7f1804ae4ff5a"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/components/MapPage.tsx": {
+    "mtime": 1779576819.4514854,
+    "ast_hash": "4a4acf7c3f47c802cccb824ca2339a4b",
+    "semantic_hash": "4a4acf7c3f47c802cccb824ca2339a4b"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/hooks/useLocalStorage.ts": {
+    "mtime": 1779576658.6472223,
+    "ast_hash": "b589167c5f1f513f9fab897d4d0e24c5",
+    "semantic_hash": "b589167c5f1f513f9fab897d4d0e24c5"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/src/lib/supabase.ts": {
+    "mtime": 1779577329.8436348,
+    "ast_hash": "bef8dc9e7acf21cf45e5868c3aaa34fe",
+    "semantic_hash": "bef8dc9e7acf21cf45e5868c3aaa34fe"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/index.html": {
+    "mtime": 1779576649.729341,
+    "ast_hash": "c1a1ceaca31a48602406409ccd636232",
+    "semantic_hash": "c1a1ceaca31a48602406409ccd636232"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/.github/workflows/deploy.yml": {
+    "mtime": 1779577528.0189955,
+    "ast_hash": "ffc574770140fab4e3bcbb46127a1852",
+    "semantic_hash": "ffc574770140fab4e3bcbb46127a1852"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/stig.png": {
+    "mtime": 1779570515.6321738,
+    "ast_hash": "a49151407555516eac242e074c77171e",
+    "semantic_hash": "a49151407555516eac242e074c77171e"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/header.png": {
+    "mtime": 1779572790.28124,
+    "ast_hash": "371621aa51393f5179bc66f1d1afbacc",
+    "semantic_hash": "371621aa51393f5179bc66f1d1afbacc"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/nina.png": {
+    "mtime": 1779570509.327758,
+    "ast_hash": "75b694826c97768a6af028c9c89352e1",
+    "semantic_hash": "75b694826c97768a6af028c9c89352e1"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/public/stig.png": {
+    "mtime": 1779576627.3768234,
+    "ast_hash": "a49151407555516eac242e074c77171e",
+    "semantic_hash": "a49151407555516eac242e074c77171e"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/public/header.png": {
+    "mtime": 1779576627.3802457,
+    "ast_hash": "371621aa51393f5179bc66f1d1afbacc",
+    "semantic_hash": "371621aa51393f5179bc66f1d1afbacc"
+  },
+  "/Users/tonjeharstad/Projects/Badekartet/public/nina.png": {
+    "mtime": 1779576627.3729055,
+    "ast_hash": "75b694826c97768a6af028c9c89352e1",
+    "semantic_hash": "75b694826c97768a6af028c9c89352e1"
+  }
+}

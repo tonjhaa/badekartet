@@ -37,34 +37,34 @@ function randomPraise(assignee: Assignee): string {
 }
 
 const DEFAULT_TASKS: Omit<Task, 'id'>[] = [
-  { name: 'Ringe Glenn', assignee: 'Stig', deadline: 'Uke 22', done: true, created_at: 1 },
-  { name: 'Handle benkeplate', assignee: 'Begge', deadline: 'Uke 22', done: false, created_at: 2 },
-  { name: 'Avtale henting av benkeplate', assignee: 'Begge', deadline: 'Lørdag 30.05', done: false, created_at: 3 },
-  { name: 'Ordne og vaske vaskerom', assignee: 'Begge', deadline: 'Uke 23', done: false, created_at: 4 },
-  { name: 'Ringe rørlegger Rune', assignee: 'Stig', deadline: 'Uke 23', done: false, created_at: 5 },
-  { name: 'Riving av bad', assignee: 'Begge', deadline: '5.–7. juni', done: false, created_at: 6 },
+  { name: 'Ringe Glenn', assignee: 'Stig', deadline: 'Uke 22', done: true, created_at: 1, sort_order: 1 },
+  { name: 'Handle benkeplate', assignee: 'Begge', deadline: 'Uke 22', done: false, created_at: 2, sort_order: 2 },
+  { name: 'Avtale henting av benkeplate', assignee: 'Begge', deadline: 'Lørdag 30.05', done: false, created_at: 3, sort_order: 3 },
+  { name: 'Ordne og vaske vaskerom', assignee: 'Begge', deadline: 'Uke 23', done: false, created_at: 4, sort_order: 4 },
+  { name: 'Ringe rørlegger Rune', assignee: 'Stig', deadline: 'Uke 23', done: false, created_at: 5, sort_order: 5 },
+  { name: 'Riving av bad', assignee: 'Begge', deadline: '5.–7. juni', done: false, created_at: 6, sort_order: 6 },
 ];
 
 const DEFAULT_SHOP: Omit<ShopItem, 'id'>[] = [
-  { name: 'Benkeplate', assignee: 'Begge', bought: true, created_at: 7 },
-  { name: 'Speil × 2', assignee: 'Nina', bought: false, created_at: 8 },
-  { name: 'Dusjkabinett', assignee: 'Stig', bought: false, created_at: 9 },
-  { name: 'Do', assignee: 'Begge', bought: false, created_at: 10 },
-  { name: 'Spilevegg', assignee: 'Stig', bought: false, created_at: 11 },
-  { name: 'Maling', assignee: 'Nina', bought: false, created_at: 12 },
-  { name: 'Fugemasse', assignee: 'Stig', bought: false, created_at: 13 },
-  { name: 'Lister', assignee: 'Begge', bought: false, created_at: 14 },
+  { name: 'Benkeplate', assignee: 'Begge', deadline: '', bought: true, created_at: 7, sort_order: 7 },
+  { name: 'Speil × 2', assignee: 'Nina', deadline: '', bought: false, created_at: 8, sort_order: 8 },
+  { name: 'Dusjkabinett', assignee: 'Stig', deadline: '', bought: false, created_at: 9, sort_order: 9 },
+  { name: 'Do', assignee: 'Begge', deadline: '', bought: false, created_at: 10, sort_order: 10 },
+  { name: 'Spilevegg', assignee: 'Stig', deadline: '', bought: false, created_at: 11, sort_order: 11 },
+  { name: 'Maling', assignee: 'Nina', deadline: '', bought: false, created_at: 12, sort_order: 12 },
+  { name: 'Fugemasse', assignee: 'Stig', deadline: '', bought: false, created_at: 13, sort_order: 13 },
+  { name: 'Lister', assignee: 'Begge', deadline: '', bought: false, created_at: 14, sort_order: 14 },
 ];
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 
 async function loadTasks() {
-  const { data } = await supabase.from('tasks').select('*').order('created_at');
+  const { data } = await supabase.from('tasks').select('*').order('sort_order');
   return (data ?? []) as Task[];
 }
 
 async function loadShop() {
-  const { data } = await supabase.from('shop_items').select('*').order('created_at');
+  const { data } = await supabase.from('shop_items').select('*').order('sort_order');
   return (data ?? []) as ShopItem[];
 }
 
@@ -156,7 +156,7 @@ export default function App() {
     return () => { supabase.removeChannel(ch); };
   }, []);
 
-  // Combined map items
+  // Combined map items — sorted by sort_order
   const allItems: MapItem[] = [
     ...tasks.map(t => ({ id: t.id, name: t.name, done: t.done, kind: 'task' as const, created_at: t.created_at })),
     ...shopItems.map(s => ({ id: s.id, name: s.name, done: s.bought, kind: 'shop' as const, created_at: s.created_at })),
@@ -164,12 +164,17 @@ export default function App() {
 
   const completedCount = allItems.filter(i => i.done).length;
 
+  function maxSortOrder(list: { sort_order: number }[]) {
+    return list.length > 0 ? Math.max(...list.map(i => i.sort_order)) : Date.now();
+  }
+
   // Task CRUD
-  async function handleTaskSave(id: string | null, data: Omit<Task, 'id' | 'done' | 'created_at'>) {
+  async function handleTaskSave(id: string | null, data: Omit<Task, 'id' | 'done' | 'created_at' | 'sort_order'>) {
     if (id) {
       await supabase.from('tasks').update(data).eq('id', id);
     } else {
-      await supabase.from('tasks').insert({ id: uid(), done: false, created_at: Date.now(), ...data });
+      const sort_order = maxSortOrder(tasks) + 1000;
+      await supabase.from('tasks').insert({ id: uid(), done: false, created_at: Date.now(), sort_order, ...data });
     }
   }
   async function handleTaskDelete(id: string) {
@@ -183,13 +188,17 @@ export default function App() {
       if (nowDone) celebrate(t.assignee);
     }
   }
+  async function handleTaskReorder(id: string, newOrder: number) {
+    await supabase.from('tasks').update({ sort_order: newOrder }).eq('id', id);
+  }
 
   // Shop CRUD
-  async function handleShopSave(id: string | null, data: Omit<ShopItem, 'id' | 'bought' | 'created_at'>) {
+  async function handleShopSave(id: string | null, data: Omit<ShopItem, 'id' | 'bought' | 'created_at' | 'sort_order'>) {
     if (id) {
       await supabase.from('shop_items').update(data).eq('id', id);
     } else {
-      await supabase.from('shop_items').insert({ id: uid(), bought: false, created_at: Date.now(), ...data });
+      const sort_order = maxSortOrder(shopItems) + 1000;
+      await supabase.from('shop_items').insert({ id: uid(), bought: false, created_at: Date.now(), sort_order, ...data });
     }
   }
   async function handleShopDelete(id: string) {
@@ -202,6 +211,9 @@ export default function App() {
       await supabase.from('shop_items').update({ bought: nowBought }).eq('id', id);
       if (nowBought) celebrate(s.assignee);
     }
+  }
+  async function handleShopReorder(id: string, newOrder: number) {
+    await supabase.from('shop_items').update({ sort_order: newOrder }).eq('id', id);
   }
 
   if (!ready) return (
@@ -257,9 +269,11 @@ export default function App() {
             onTaskSave={handleTaskSave}
             onTaskDelete={handleTaskDelete}
             onTaskToggle={handleTaskToggle}
+            onTaskReorder={handleTaskReorder}
             onShopSave={handleShopSave}
             onShopDelete={handleShopDelete}
             onShopToggle={handleShopToggle}
+            onShopReorder={handleShopReorder}
           />
         )}
       </div>

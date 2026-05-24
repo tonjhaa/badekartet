@@ -7,14 +7,17 @@ export interface Task {
   deadline: string;
   done: boolean;
   created_at: number;
+  sort_order: number;
 }
 
 export interface ShopItem {
   id: string;
   name: string;
   assignee: Assignee;
+  deadline: string;
   bought: boolean;
   created_at: number;
+  sort_order: number;
 }
 
 export type MapItem = {
