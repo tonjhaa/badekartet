@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, memo } from 'react';
 import type { MapItem } from '../types';
 
 function getPos(i: number) {
-  return { x: i % 2 === 0 ? 95 : 245, y: 130 + i * 110 };
+  return { x: i % 2 === 0 ? 95 : 245, y: 80 + i * 110 };
 }
 
 function makePath(from: number, to: number): string {
