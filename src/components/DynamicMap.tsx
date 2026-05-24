@@ -1,7 +1,9 @@
 import { useRef, useEffect, useState, memo } from 'react';
 import type { MapItem } from '../types';
 
+// i=-1 is the "start" position before node 0, allowing walk animation from start→node0
 function getPos(i: number) {
+  if (i < 0) return { x: 95, y: 20 };
   return { x: i % 2 === 0 ? 95 : 245, y: 130 + i * 110 };
 }
 
@@ -127,9 +129,9 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
 
   useEffect(() => {
     if (!walkAnim || n === 0) return;
-    // walkAnim stores completed counts, convert to 0-based node indices
-    const from = getPos(Math.min(Math.max(walkAnim.from - 1, 0), n - 1));
-    const to   = getPos(Math.min(Math.max(walkAnim.to   - 1, 0), n - 1));
+    // walkAnim stores completed counts; subtract 1 to get node index (-1 = start position)
+    const from = getPos(Math.min(Math.max(walkAnim.from - 1, -1), n - 1));
+    const to   = getPos(Math.min(Math.max(walkAnim.to   - 1, -1), n - 1));
     const duration = 1800;
     const start = performance.now();
 
@@ -170,17 +172,21 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
     return () => { if (rafId.current) cancelAnimationFrame(rafId.current); };
   }, [walkAnim]);
 
-  // effectiveCompleted: only used for character rest position so they stand at destination
-  // Road and node coloring use actual completedCount to avoid premature teal ahead
+  // effectiveCompleted: only for character rest position (optimistic during walk)
+  // Road and node coloring use actual completedCount to avoid premature teal
   const effectiveCompleted = walkAnim ? Math.max(walkAnim.to, completedCount) : completedCount;
 
-  const activeIdx = n > 0 ? Math.min(Math.max(effectiveCompleted - 1, 0), n - 1) : 0;
-  const rest = n > 0 ? getPos(activeIdx) : { x: 170, y: 130 };
+  // restIdx=-1 means start position (before first node), valid when nothing is done yet
+  const restIdx = Math.min(Math.max(effectiveCompleted - 1, -1), n - 1);
+  const rest = n > 0 ? getPos(restIdx) : getPos(-1);
 
-  const lastDone  = completedCount - 1;
-  const donePath  = lastDone >= 1 && n >= 2 ? makePath(0, Math.min(lastDone, n - 1)) : '';
-  const greyStart = Math.max(lastDone, 0);
-  const greyPath  = n >= 2 ? makePath(greyStart, n - 1) : '';
+  // donePath: from start (-1) up through last completed node
+  const lastDone = completedCount - 1; // -1 when nothing done
+  const donePath = completedCount >= 1 && n >= 1
+    ? makePath(-1, Math.min(lastDone, n - 1))
+    : '';
+  // greyPath: from last completed node to end (overlaps donePath at join point, but teal renders on top)
+  const greyPath = n >= 2 ? makePath(Math.max(lastDone, -1), n - 1) : '';
 
   return (
     <svg className="map-svg" viewBox={`0 0 340 ${svgH}`} style={{ display: 'block', width: '100%', overflow: 'visible' }}>
