@@ -131,7 +131,7 @@ interface Props {
 
 export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone }: Props) {
   const n = items.length;
-  const svgH = n > 0 ? getPos(n - 1).y + 110 : 300;
+  const svgH = n > 0 ? getPos(n - 1).y + 70 : 300;
 
   const stigRef    = useRef<SVGImageElement>(null);
   const ninaGRef   = useRef<SVGGElement>(null);
@@ -271,44 +271,57 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
       )}
 
       {/* Nodes */}
-      {items.map((item, i) => {
-        const { x: nx, y: ny } = getPos(i);
-        const isCurrent = walkAnim == null && i === Math.min(completedCount, n - 1);
-        if (isCurrent) {
+      {(() => {
+        // Done items in created_at order → tooltip slot mapping
+        const doneItems = items.filter(it => it.done);
+        return items.map((item, i) => {
+          const { x: nx, y: ny } = getPos(i);
+          const isNodeDone = i < completedCount;
+          const isCurrent = walkAnim == null && completedCount < n && i === completedCount;
+          const isGoal = i === n - 1 && !isNodeDone && !isCurrent;
+
+          if (isCurrent) {
+            return (
+              <g key={item.id}>
+                <circle cx={nx} cy={ny} r={26} fill="#FFD93D" opacity={0.2} className="map-pulse" />
+                <circle cx={nx} cy={ny} r={19} fill="white" stroke="#FFD93D" strokeWidth={3} />
+                <circle cx={nx} cy={ny} r={7}  fill="#FFD93D" />
+              </g>
+            );
+          }
+          if (isGoal) {
+            return (
+              <g key={item.id}>
+                <circle cx={nx} cy={ny} r={28} fill="#FFD93D" opacity={0.14} />
+                <circle cx={nx} cy={ny} r={21} fill="white" stroke="#C9A227" strokeWidth={3} strokeDasharray="4 3" />
+                <text x={nx} y={ny + 1} textAnchor="middle" dominantBaseline="middle" fontSize={18}>🛁</text>
+              </g>
+            );
+          }
+          if (isNodeDone) {
+            return (
+              <g
+                key={item.id}
+                onMouseEnter={() => setHoveredNode(i)}
+                onMouseLeave={() => setHoveredNode(null)}
+                onClick={() => setHoveredNode(hoveredNode === i ? null : i)}
+                style={{ cursor: 'pointer' }}
+              >
+                <circle cx={nx} cy={ny} r={31} fill="#FFD93D" opacity={0.22} />
+                <circle cx={nx} cy={ny} r={24} fill="white" stroke="#FFD93D" strokeWidth={3.5} />
+                <circle cx={nx} cy={ny} r={20} fill="#0ABFBC" />
+                <text x={nx} y={ny + 1} textAnchor="middle" dominantBaseline="middle"
+                  fontSize={21} fontWeight="900" fill="white">✓</text>
+              </g>
+            );
+          }
           return (
-            <g key={item.id}>
-              <circle cx={nx} cy={ny} r={26} fill="#FFD93D" opacity={0.2} className="map-pulse" />
-              <circle cx={nx} cy={ny} r={19} fill="white" stroke="#FFD93D" strokeWidth={3} />
-              <circle cx={nx} cy={ny} r={7}  fill="#FFD93D" />
+            <g key={item.id} opacity={0.45}>
+              <circle cx={nx} cy={ny} r={15} fill="white" stroke="#b8ccd4" strokeWidth={2} />
             </g>
           );
-        }
-        if (item.done) {
-          return (
-            <g
-              key={item.id}
-              onMouseEnter={() => setHoveredNode(i)}
-              onMouseLeave={() => setHoveredNode(null)}
-              onClick={() => setHoveredNode(hoveredNode === i ? null : i)}
-              style={{ cursor: 'pointer' }}
-            >
-              {/* Outer gold glow */}
-              <circle cx={nx} cy={ny} r={31} fill="#FFD93D" opacity={0.22} />
-              {/* Gold ring + teal fill */}
-              <circle cx={nx} cy={ny} r={24} fill="white" stroke="#FFD93D" strokeWidth={3.5} />
-              <circle cx={nx} cy={ny} r={20} fill="#0ABFBC" />
-              {/* Big checkmark */}
-              <text x={nx} y={ny + 1} textAnchor="middle" dominantBaseline="middle"
-                fontSize={21} fontWeight="900" fill="white">✓</text>
-            </g>
-          );
-        }
-        return (
-          <g key={item.id} opacity={0.45}>
-            <circle cx={nx} cy={ny} r={15} fill="white" stroke="#b8ccd4" strokeWidth={2} />
-          </g>
-        );
-      })}
+        });
+      })()}
 
       {/* Walk glow */}
       <circle
@@ -338,7 +351,7 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
       </g>
 
       {/* Tooltip — rendered last so always on top of everything */}
-      {hoveredNode !== null && items[hoveredNode]?.done && (() => {
+      {hoveredNode !== null && hoveredNode < completedCount && (() => {
         const { x: tx, y: ty } = getPos(hoveredNode);
         const below = ty < 130;
         const TW = 162; const TH = 58;
@@ -346,7 +359,8 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
         const ry = below ? ty + 30 : ty - TH - 16;
         const arrowBase = below ? ry : ry + TH;
         const arrowTip = below ? ty + 26 : ty - 12;
-        const item = items[hoveredNode];
+        const doneItems = items.filter(it => it.done);
+        const item = doneItems[hoveredNode] ?? items[hoveredNode];
         return (
           <g style={{ pointerEvents: 'none' }}>
             <rect x={rx} y={ry} width={TW} height={TH} rx={12}

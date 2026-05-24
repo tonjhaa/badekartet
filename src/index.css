@@ -738,227 +738,40 @@ body {
 /* ---- DIPLOMA SCREEN ---- */
 .diploma-overlay {
   position: fixed; inset: 0; z-index: 950;
-  background: rgba(20, 10, 0, 0.88);
-  backdrop-filter: blur(4px);
-  display: flex; align-items: flex-start; justify-content: center;
-  overflow-y: auto;
-  padding: 24px 16px 40px;
+  background: rgba(10, 5, 0, 0.90);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px 16px;
 }
-.diploma-page {
-  max-width: 960px; width: 100%;
-  display: flex; flex-direction: column; align-items: center; gap: 24px;
+.diploma-img-page {
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  max-height: 100%;
 }
-.diploma-page-title {
-  font-family: 'Great Vibes', cursive;
-  font-size: 36px;
-  color: #F5D060;
-  text-shadow: 0 2px 12px rgba(200,150,0,.5);
-  text-align: center;
-}
-.diploma-pair {
-  display: flex;
-  gap: 28px;
-  width: 100%;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* The diploma card itself */
-.diploma {
-  position: relative;
-  background:
-    radial-gradient(ellipse at 30% 20%, #FFFBEE 0%, #F5E6C0 40%, #EDD9A3 100%);
-  border: 4px solid #C9A227;
-  outline: 6px solid transparent;
-  outline-offset: -10px;
-  box-shadow:
-    inset 0 0 0 10px rgba(201,162,39,0.18),
-    inset 0 0 0 12px rgba(201,162,39,0.12),
-    0 8px 40px rgba(0,0,0,0.5),
-    0 2px 8px rgba(0,0,0,0.3);
-  border-radius: 4px;
-  width: 420px;
-  min-width: 300px;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-/* Inner double-border effect via pseudo */
-.diploma::before {
-  content: '';
-  position: absolute;
-  inset: 10px;
-  border: 1.5px solid rgba(201,162,39,0.55);
-  border-radius: 2px;
-  pointer-events: none;
-  z-index: 0;
-}
-.diploma::after {
-  content: '';
-  position: absolute;
-  inset: 14px;
-  border: 1px solid rgba(201,162,39,0.3);
-  border-radius: 1px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Corners */
-.diploma-corner {
-  position: absolute; z-index: 2;
-  width: 60px; height: 60px;
-}
-.diploma-corner.tl { top: 0; left: 0; }
-.diploma-corner.tr { top: 0; right: 0; transform: scaleX(-1); }
-.diploma-corner.bl { bottom: 0; left: 0; transform: scaleY(-1); }
-.diploma-corner.br { bottom: 0; right: 0; transform: scale(-1,-1); }
-
-.diploma-inner {
-  position: relative; z-index: 1;
-  padding: 40px 36px 28px;
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center;
-  gap: 0;
-}
-
-.diploma-header-label {
-  font-family: 'Cinzel', serif;
-  font-size: 30px; font-weight: 700;
-  color: #7A5000;
-  letter-spacing: 0.25em;
-  text-shadow: 0 1px 2px rgba(200,150,0,.25);
-  margin-bottom: 10px;
-}
-
-.diploma-divider {
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #C9A227 20%, #C9A227 80%, transparent);
-  margin: 8px 0;
-  border-radius: 2px;
-}
-.diploma-divider.thin {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201,162,39,.5) 30%, rgba(201,162,39,.5) 70%, transparent);
-  margin: 12px 0;
-}
-
-.diploma-sub {
-  font-family: 'Cinzel', serif;
-  font-size: 11px; font-weight: 400;
-  color: #8B6914;
-  letter-spacing: 0.14em;
-  margin-bottom: 14px;
-  text-transform: uppercase;
-}
-
-.diploma-portrait-wrap {
-  margin: 4px 0 8px;
-}
-.diploma-portrait-ring {
-  width: 100px; height: 100px;
-  border-radius: 50%;
-  border: 3px solid #C9A227;
-  box-shadow:
-    0 0 0 5px rgba(201,162,39,.15),
-    0 0 0 7px rgba(201,162,39,.08),
-    0 4px 16px rgba(0,0,0,.25);
-  overflow: hidden;
-  background: #F0E0B0;
-  display: flex; align-items: flex-end; justify-content: center;
-}
-.diploma-portrait-img {
-  width: 90px;
+.diploma-img {
+  max-width: min(560px, 90vw);
+  max-height: calc(100vh - 100px);
   object-fit: contain;
-  object-position: bottom;
-  display: block;
+  border-radius: 4px;
+  box-shadow: 0 8px 60px rgba(0,0,0,.6), 0 2px 10px rgba(0,0,0,.4);
 }
-.diploma-portrait-img.nina {
-  width: 80px;
+.diploma-img-btns {
+  display: flex; gap: 12px;
 }
-
-.diploma-name {
-  font-family: 'Great Vibes', cursive;
-  font-size: 42px;
-  color: #5A3800;
-  text-shadow:
-    0 1px 0 rgba(255,220,100,.6),
-    0 2px 6px rgba(150,80,0,.2);
-  line-height: 1.1;
-  margin: 6px 0 4px;
+.diploma-print-btn {
+  padding: 11px 24px; border-radius: 50px; border: none;
+  background: linear-gradient(135deg, #C9A227, #F5D060);
+  font-family: 'Baloo 2', cursive; font-size: 15px; font-weight: 800;
+  color: #3D2000; cursor: pointer;
+  box-shadow: 0 4px 0 #7A5000;
+  transition: transform .12s, box-shadow .12s;
 }
-
-.diploma-role {
-  font-family: 'Cinzel', serif;
-  font-size: 11px; font-weight: 600;
-  color: #9B7820;
-  letter-spacing: 0.08em;
-  margin-bottom: 4px;
-  font-style: italic;
-  padding: 0 8px;
-}
-
-.diploma-text {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 12.5px;
-  color: #3D2800;
-  line-height: 1.75;
-  font-style: italic;
-  margin: 0;
-  padding: 0 4px;
-}
-
-.diploma-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 12px;
-  margin-top: 4px;
-}
-.diploma-seal-wrap {
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-}
-.diploma-seal-caption {
-  font-family: 'Cinzel', serif;
-  font-size: 7px; color: #9B7820; letter-spacing: 0.1em;
-}
-.diploma-sig-block {
-  flex: 1;
-  text-align: right;
-  border-top: 1px solid rgba(201,162,39,.5);
-  padding-top: 8px;
-}
-.diploma-sig-line {
-  font-family: 'Great Vibes', cursive;
-  font-size: 22px;
-  color: #4A2800;
-  line-height: 1.1;
-}
-.diploma-sig-title {
-  font-family: 'Cinzel', serif;
-  font-size: 8px; color: #9B7820; letter-spacing: 0.06em;
-  margin-top: 2px;
-}
-.diploma-sig-date {
-  font-family: 'Cinzel', serif;
-  font-size: 9px; color: #7A5800;
-  margin-top: 4px; font-style: italic;
-}
-
+.diploma-print-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #7A5000; }
 .diploma-close {
-  background: rgba(201,162,39,.18);
-  border: 1.5px solid rgba(201,162,39,.5);
-  color: #F5D060;
-  font-family: 'Cinzel', serif;
-  font-size: 14px; letter-spacing: 0.1em;
-  padding: 10px 28px; border-radius: 4px;
-  cursor: pointer;
+  padding: 11px 24px; border-radius: 50px;
+  background: rgba(255,255,255,.12);
+  border: 1.5px solid rgba(255,255,255,.3);
+  font-family: 'Baloo 2', cursive; font-size: 15px; font-weight: 700;
+  color: rgba(255,255,255,.85); cursor: pointer;
   transition: background .15s;
 }
-.diploma-close:hover { background: rgba(201,162,39,.32); }
-
-@media (max-width: 480px) {
-  .diploma { width: 100%; min-width: unset; }
-  .diploma-name { font-size: 34px; }
-  .diploma-inner { padding: 36px 24px 20px; }
-}
+.diploma-close:hover { background: rgba(255,255,255,.2); }
