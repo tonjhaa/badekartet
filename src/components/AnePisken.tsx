@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import type { Task, ShopItem } from '../types';
 
@@ -196,39 +196,36 @@ const MOOD_FALLBACK: Record<Mood, string> = {
 interface Props {
   lastProgressTime: number;
   lastReversalTime: number;
+  jubilantUntil: number;
   pendingTasks: Task[];
   pendingShop: ShopItem[];
   forcedMessage?: { msg: string } | null;
   hasOverdueItems?: boolean;
 }
 
-export default function AnePisken({ lastProgressTime, lastReversalTime, pendingTasks, pendingShop, forcedMessage, hasOverdueItems }: Props) {
+export default function AnePisken({ lastProgressTime, lastReversalTime, jubilantUntil, pendingTasks, pendingShop, forcedMessage, hasOverdueItems }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [closing, setClosing] = useState(false);
   const [imgErr, setImgErr] = useState(false);
   const [, setTick] = useState(0);
+
+  const isJubilant = Date.now() < jubilantUntil;
   const baseMood = getMood(lastProgressTime, lastReversalTime);
-  const prevMoodRef = useRef<Mood | null>(null);
-  const mood: Mood = hasOverdueItems
-    ? MOOD_ORDER[Math.max(MOOD_ORDER.indexOf(baseMood), MOOD_ORDER.indexOf('rasende'))]
-    : baseMood;
+  const mood: Mood = isJubilant
+    ? 'jubler'
+    : hasOverdueItems
+      ? MOOD_ORDER[Math.max(MOOD_ORDER.indexOf(baseMood), MOOD_ORDER.indexOf('rasende'))]
+      : baseMood;
 
-  // Reset image error flag when mood changes so each mood gets a fresh load attempt
-  if (prevMoodRef.current !== mood) {
-    prevMoodRef.current = mood;
-    if (imgErr) setImgErr(false);
-  }
+  // Reset imgErr when mood changes
+  useEffect(() => { setImgErr(false); }, [mood]);
 
-  // Re-render when jubilation period ends so mood transitions correctly
+  // Re-render when jubilation period ends
   useEffect(() => {
-    if (!lastProgressTime) return;
-    const ONE_HOUR = 60 * 60 * 1000;
-    const elapsed = Date.now() - lastProgressTime;
-    const remaining = ONE_HOUR - elapsed;
-    if (remaining <= 0) return;
-    const t = setTimeout(() => setTick(n => n + 1), remaining + 100);
+    if (!jubilantUntil || Date.now() >= jubilantUntil) return;
+    const t = setTimeout(() => setTick(n => n + 1), jubilantUntil - Date.now() + 100);
     return () => clearTimeout(t);
-  }, [lastProgressTime]);
+  }, [jubilantUntil]);
 
   const open = useCallback(() => {
     setMessage(getContextMessage(mood, pendingTasks, pendingShop));

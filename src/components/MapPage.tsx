@@ -57,6 +57,7 @@ interface Props {
   shopItems: ShopItem[];
   lastProgressTime: number;
   lastReversalTime: number;
+  jubilantUntil: number;
   piskenTrigger: { msg: string } | null;
   onTaskToggle: (id: string) => void;
   onTaskSave: (id: string | null, data: Omit<Task, 'id' | 'done' | 'created_at' | 'sort_order'>) => void;
@@ -100,7 +101,7 @@ function SortableQtRow({ id, done, name, deadline, overdue, onToggle, onEdit }: 
 }
 
 export default function MapPage({
-  items, completedCount, tasks, shopItems, lastProgressTime, lastReversalTime, piskenTrigger,
+  items, completedCount, tasks, shopItems, lastProgressTime, lastReversalTime, jubilantUntil, piskenTrigger,
   onTaskToggle, onTaskSave, onTaskDelete, onTaskReorder,
   onShopToggle, onShopSave, onShopDelete, onShopReorder,
   walkAnim, onWalkDone,
@@ -169,6 +170,7 @@ export default function MapPage({
           <AnePisken
             lastProgressTime={lastProgressTime}
             lastReversalTime={lastReversalTime}
+            jubilantUntil={jubilantUntil}
             pendingTasks={pendingTasks}
             pendingShop={pendingShop}
             forcedMessage={piskenTrigger}

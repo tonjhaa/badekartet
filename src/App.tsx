@@ -104,6 +104,7 @@ export default function App() {
   const [lastReversalTime, setLastReversalTime] = useState<number>(
     () => Number(localStorage.getItem(REVERSAL_TS_KEY) ?? 0)
   );
+  const [jubilantUntil, setJubilantUntil] = useState<number>(0);
   const [piskenTrigger, setPiskenTrigger] = useState<{ msg: string } | null>(null);
   const [showCompletion, setShowCompletion] = useState(
     () => new URLSearchParams(window.location.search).has('celebrate')
@@ -220,6 +221,7 @@ export default function App() {
     const now = Date.now();
     localStorage.setItem(PROGRESS_TS_KEY, String(now));
     setLastProgressTime(now);
+    setJubilantUntil(now + 60 * 60 * 1000);
   }
 
   function recordReversal() {
@@ -440,6 +442,7 @@ export default function App() {
           shopItems={shopItems}
           lastProgressTime={lastProgressTime}
           lastReversalTime={lastReversalTime}
+          jubilantUntil={jubilantUntil}
           piskenTrigger={piskenTrigger}
           onTaskToggle={handleTaskToggle}
           onTaskSave={handleTaskSave}
