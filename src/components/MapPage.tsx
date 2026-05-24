@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import {
   DndContext, PointerSensor, TouchSensor,
   useSensor, useSensors, closestCenter, type DragEndEvent,
@@ -10,15 +10,6 @@ import ItemModal from './ItemModal';
 import AnePisken from './AnePisken';
 import type { MapItem, Task, ShopItem } from '../types';
 
-type Mood = 'jubler' | 'fornoyd' | 'noytral' | 'irritert' | 'rasende';
-
-const MOOD_OPTIONS: { mood: Mood; img: string; label: string }[] = [
-  { mood: 'jubler',   img: 'ane-jubler.png',   label: 'Jubler' },
-  { mood: 'fornoyd',  img: 'ane-fornoyd.png',  label: 'Fornøyd' },
-  { mood: 'noytral',  img: 'ane-noytral.png',  label: 'Nøytral' },
-  { mood: 'irritert', img: 'ane-irritert.png', label: 'Irritert' },
-  { mood: 'rasende',  img: 'ane-rasende.png',  label: 'Rasende' },
-];
 
 const LEVEL_TITLES = [
   'Planleggingspirater', 'Byggherrer på gli', 'Halvveis-helter',
@@ -112,21 +103,6 @@ export default function MapPage({
   walkAnim, onWalkDone,
 }: Props) {
   const [modal, setModal] = useState<Modal>(null);
-  const [moodPreview, setMoodPreview] = useState<Mood | null>(null);
-  const [moodPickerOpen, setMoodPickerOpen] = useState(false);
-  const pickerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!moodPickerOpen) return;
-    function onClickOutside(e: MouseEvent) {
-      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-        setMoodPickerOpen(false);
-        setMoodPreview(null);
-      }
-    }
-    document.addEventListener('mousedown', onClickOutside);
-    return () => document.removeEventListener('mousedown', onClickOutside);
-  }, [moodPickerOpen]);
 
   const total = items.length;
   const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
@@ -162,34 +138,7 @@ export default function MapPage({
 
   return (
     <>
-      <div className="level-card" style={{ position: 'relative' }}>
-        {/* Mood override picker */}
-        <div ref={pickerRef} className="mood-picker-wrap">
-          <button
-            className="mood-picker-btn"
-            onClick={() => setMoodPickerOpen(o => !o)}
-            title="Juster Piskens humør"
-          >
-            <i className="fa-solid fa-sliders" />
-          </button>
-          {moodPickerOpen && (
-            <div className="mood-picker-dropdown">
-              {MOOD_OPTIONS.map(({ mood, img, label }) => (
-                <button
-                  key={mood}
-                  className={`mood-picker-option${moodPreview === mood ? ' active' : ''}`}
-                  onMouseEnter={() => setMoodPreview(mood)}
-                  onMouseLeave={() => setMoodPreview(null)}
-                  onClick={() => { setMoodPickerOpen(false); setMoodPreview(null); }}
-                >
-                  <img src={`${import.meta.env.BASE_URL}${img}`} alt={label} className="mood-picker-img" />
-                  {label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
+      <div className="level-card">
         <div className="level-card-inner">
           <div className="level-progress-area">
             <div className="level-top">
@@ -212,7 +161,6 @@ export default function MapPage({
             lastReversalTime={lastReversalTime}
             pendingTasks={pendingTasks}
             pendingShop={pendingShop}
-            moodOverride={moodPreview}
             forcedMessage={piskenTrigger}
           />
         </div>

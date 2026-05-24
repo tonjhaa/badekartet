@@ -147,15 +147,14 @@ interface Props {
   lastReversalTime: number;
   pendingTasks: Task[];
   pendingShop: ShopItem[];
-  moodOverride?: Mood | null;
   forcedMessage?: { msg: string } | null;
 }
 
-export default function AnePisken({ lastProgressTime, lastReversalTime, pendingTasks, pendingShop, moodOverride, forcedMessage }: Props) {
+export default function AnePisken({ lastProgressTime, lastReversalTime, pendingTasks, pendingShop, forcedMessage }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [closing, setClosing] = useState(false);
   const [imgErr, setImgErr] = useState(false);
-  const mood = moodOverride ?? getMood(lastProgressTime, lastReversalTime);
+  const mood = getMood(lastProgressTime, lastReversalTime);
 
   const open = useCallback(() => {
     setMessage(getContextMessage(mood, pendingTasks, pendingShop));
