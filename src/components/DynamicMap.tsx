@@ -388,36 +388,6 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
         </g>
       </g>
 
-      {/* Pisken start nudge — only when nothing is done yet */}
-      {completedCount === 0 && !walkAnim && (() => {
-        const { x: cx, y: cy } = getPos(0);
-        const bx = cx + 38; const by = cy - 58;
-        const bw = 168; const bh = 52;
-        return (
-          <g style={{ pointerEvents: 'none' }}>
-            <rect x={bx} y={by} width={bw} height={bh} rx={12}
-              fill="white" stroke="#0ABFBC" strokeWidth={2}
-              filter="drop-shadow(0 3px 10px rgba(0,0,0,0.16))" />
-            {/* tail pointing left toward characters */}
-            <polygon points={`${bx},${by + 18} ${bx},${by + 30} ${bx - 10},${by + 24}`}
-              fill="white" stroke="#0ABFBC" strokeWidth={2} strokeLinejoin="round" />
-            <line x1={bx} y1={by + 19} x2={bx} y2={by + 29} stroke="white" strokeWidth={3} />
-            <text x={bx + 10} y={by + 18} fontSize={10} fontWeight="800" fill="#1A3A5C"
-              style={{ fontFamily: "'Baloo 2', cursive" }}>
-              Klar, ferdig, START! 🛁
-            </text>
-            <text x={bx + 10} y={by + 34} fontSize={9.5} fill="#5a8fa8"
-              style={{ fontFamily: "'Baloo 2', cursive" }}>
-              Huk av første gjøremål 👇
-            </text>
-            <text x={bx + 10} y={by + 47} fontSize={9} fill="#0ABFBC"
-              style={{ fontFamily: "'Baloo 2', cursive" }}>
-              — Ane «Pisken»
-            </text>
-          </g>
-        );
-      })()}
-
     </svg>
 
     {hoveredNode !== null && hoveredNode < completedCount && tooltipPos && (() => {
