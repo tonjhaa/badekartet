@@ -267,13 +267,7 @@ export default function AnePisken({ lastProgressTime, lastReversalTime, jubilant
   return (
     <>
       <div className="ane-wrap" onClick={message ? close : open} title="Klikk for beskjed fra Pisken">
-        {completedCount === 0 && !message && (
-          <div className="pisken-start-bubble">
-            <div className="psb-line1">Klar, ferdig, START! 🛁</div>
-            <div className="psb-line2">Huk av første gjøremål 👇</div>
-          </div>
-        )}
-        <div className={`ane-figure ane-${mood}`}>
+<div className={`ane-figure ane-${mood}`}>
           {!imgErr
             ? <img key={mood} src={`${import.meta.env.BASE_URL}${MOOD_IMG[mood]}`} alt="" className="ane-img" onError={() => setImgErr(true)} />
             : <div className="ane-fallback">{MOOD_FALLBACK[mood]}</div>}
