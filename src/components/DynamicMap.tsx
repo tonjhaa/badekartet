@@ -120,22 +120,33 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
   const n = items.length;
   const svgH = n > 0 ? getPos(n - 1).y + 110 : 300;
 
-  // Refs for direct DOM manipulation during walk animation (avoids re-renders at 60fps)
-  const stigRef  = useRef<SVGImageElement>(null);
-  const ninaGRef = useRef<SVGGElement>(null);
-  const glowRef  = useRef<SVGCircleElement>(null);
-  const rafId    = useRef<number | null>(null);
+  const stigRef    = useRef<SVGImageElement>(null);
+  const ninaGRef   = useRef<SVGGElement>(null);
+  const glowRef    = useRef<SVGCircleElement>(null);
+  const animSegRef = useRef<SVGGElement>(null);   // animated new road segment
+  const segLenRef  = useRef(0);
+  const rafId      = useRef<number | null>(null);
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
     if (!walkAnim || n === 0) return;
-    // walkAnim stores completed counts; subtract 1 to get node index (-1 = start position)
     const from = getPos(Math.min(Math.max(walkAnim.from - 1, -1), n - 1));
     const to   = getPos(Math.min(Math.max(walkAnim.to   - 1, -1), n - 1));
     const duration = 1800;
     const start = performance.now();
 
-    setAnimating(true); // single re-render to show glow
+    setAnimating(true);
+
+    // Measure the new segment paths and hide them initially
+    const paths = animSegRef.current
+      ? Array.from(animSegRef.current.querySelectorAll('path')).slice(0, 3) as SVGPathElement[]
+      : [];
+    const len = paths[0]?.getTotalLength() ?? 0;
+    segLenRef.current = len;
+    paths.forEach(p => {
+      p.style.strokeDasharray = String(len);
+      p.style.strokeDashoffset = String(len);
+    });
 
     function ease(t: number) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
 
@@ -145,7 +156,6 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
       const cx = from.x + (to.x - from.x) * e;
       const cy = from.y + (to.y - from.y) * e;
 
-      // Direct DOM updates — no React re-render
       stigRef.current?.setAttribute('x', String(cx + 20));
       stigRef.current?.setAttribute('y', String(cy - 75));
 
@@ -160,10 +170,16 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
         glowRef.current.setAttribute('cy', String(cy + 18));
       }
 
+      // Reveal road segment progressively
+      if (len > 0) {
+        const offset = String(len * (1 - e));
+        paths.forEach(p => { p.style.strokeDashoffset = offset; });
+      }
+
       if (t < 1) {
         rafId.current = requestAnimationFrame(tick);
       } else {
-        setAnimating(false); // single re-render to hide glow
+        setAnimating(false);
         onWalkDone?.();
       }
     }
@@ -172,21 +188,19 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
     return () => { if (rafId.current) cancelAnimationFrame(rafId.current); };
   }, [walkAnim]);
 
-  // effectiveCompleted: only for character rest position (optimistic during walk)
-  // Road and node coloring use actual completedCount to avoid premature teal
   const effectiveCompleted = walkAnim ? Math.max(walkAnim.to, completedCount) : completedCount;
-
-  // restIdx=-1 means start position (before first node), valid when nothing is done yet
   const restIdx = Math.min(Math.max(effectiveCompleted - 1, -1), n - 1);
   const rest = n > 0 ? getPos(restIdx) : getPos(-1);
 
-  // donePath: from start (-1) up through last completed node
-  const lastDone = completedCount - 1; // -1 when nothing done
-  const donePath = completedCount >= 1 && n >= 1
-    ? makePath(-1, Math.min(lastDone, n - 1))
+  // Freeze the done road at walkAnim.from during animation so it doesn't jump ahead
+  const displayCount = walkAnim != null ? walkAnim.from : completedCount;
+  const displayLastDone = displayCount - 1;
+  const donePath  = displayCount >= 1 && n >= 1 ? makePath(-1, Math.min(displayLastDone, n - 1)) : '';
+  const greyPath  = n >= 2 ? makePath(Math.max(displayLastDone, -1), n - 1) : '';
+  // New segment being animated (start → dest for first walk, prev node → next node otherwise)
+  const newSegPath = walkAnim
+    ? makePath(Math.max(walkAnim.from - 1, -1), Math.min(walkAnim.to - 1, n - 1))
     : '';
-  // greyPath: from last completed node to end (overlaps donePath at join point, but teal renders on top)
-  const greyPath = n >= 2 ? makePath(Math.max(lastDone, -1), n - 1) : '';
 
   return (
     <svg className="map-svg" viewBox={`0 0 340 ${svgH}`} style={{ display: 'block', width: '100%', overflow: 'visible' }}>
@@ -217,10 +231,19 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
       <Road d={greyPath} done={false} />
       <Road d={donePath} done />
 
-      {/* Nodes — current node (where characters stand) is yellow, past nodes are teal, future grey */}
+      {/* Animated new segment — progressively revealed via stroke-dashoffset in RAF */}
+      {walkAnim && newSegPath && (
+        <g ref={animSegRef}>
+          <path d={newSegPath} stroke="rgba(0,0,0,0.09)" strokeWidth={26} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          <path d={newSegPath} stroke="#00968C" strokeWidth={22} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          <path d={newSegPath} stroke="#0ABFBC" strokeWidth={15} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+      )}
+
+      {/* Nodes — yellow only when walk is complete (walkAnim null), teal for past, grey for future */}
       {items.map((item, i) => {
         const { x: nx, y: ny } = getPos(i);
-        const isCurrent = effectiveCompleted > 0 && i === effectiveCompleted - 1;
+        const isCurrent = walkAnim == null && completedCount > 0 && i === completedCount - 1;
         if (isCurrent) {
           return (
             <g key={item.id}>
