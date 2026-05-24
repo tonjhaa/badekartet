@@ -7,6 +7,7 @@ import MapPage from './components/MapPage';
 import CompletionScreen from './components/CompletionScreen';
 import DiplomaScreen from './components/DiplomaScreen';
 import OverdueRain from './components/OverdueRain';
+import InfoModal from './components/InfoModal';
 import { isOverdue } from './utils/deadline';
 
 const PROGRESS_PRAISE = [
@@ -111,6 +112,7 @@ export default function App() {
   const [showDiploma, setShowDiploma] = useState(
     () => new URLSearchParams(window.location.search).has('diplom')
   );
+  const [showInfo, setShowInfo] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function playFanfare() {
@@ -402,12 +404,15 @@ export default function App() {
       {(hasOverdueItems || forceOverdue) && <OverdueRain />}
       {showCompletion && <CompletionScreen onClose={() => setShowCompletion(false)} onDiplom={() => { setShowCompletion(false); setShowDiploma(true); }} />}
       {showDiploma && <DiplomaScreen onClose={() => setShowDiploma(false)} />}
+      {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
 
       {toast && (
         <div className="praise-toast" key={toast + Date.now()}>
           {toast}
         </div>
       )}
+
+      <button className="info-btn" onClick={() => setShowInfo(true)} title="Om Badekartet">ℹ</button>
 
       <div className="wrap">
         <div className="game-header">
