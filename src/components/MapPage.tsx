@@ -65,6 +65,7 @@ interface Props {
   shopItems: ShopItem[];
   lastProgressTime: number;
   lastReversalTime: number;
+  piskenTrigger: { msg: string } | null;
   onTaskToggle: (id: string) => void;
   onTaskSave: (id: string | null, data: Omit<Task, 'id' | 'done' | 'created_at' | 'sort_order'>) => void;
   onTaskDelete: (id: string) => void;
@@ -105,7 +106,7 @@ function SortableQtRow({ id, done, name, deadline, onToggle, onEdit }: {
 }
 
 export default function MapPage({
-  items, completedCount, tasks, shopItems, lastProgressTime, lastReversalTime,
+  items, completedCount, tasks, shopItems, lastProgressTime, lastReversalTime, piskenTrigger,
   onTaskToggle, onTaskSave, onTaskDelete, onTaskReorder,
   onShopToggle, onShopSave, onShopDelete, onShopReorder,
   walkAnim, onWalkDone,
@@ -212,6 +213,7 @@ export default function MapPage({
             pendingTasks={pendingTasks}
             pendingShop={pendingShop}
             moodOverride={moodPreview}
+            forcedMessage={piskenTrigger}
           />
         </div>
       </div>

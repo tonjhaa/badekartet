@@ -15,6 +15,23 @@ const PROGRESS_PRAISE = [
   'Ja! Det skjer nå! 🏆',
 ];
 
+const CREATION_MESSAGES = [
+  'NY OPPGAVE! Planlegging er FREMGANG! Godt tenkt! 🎉',
+  'JA! Dere ser hva som trengs! Det er lederskapsinstinkt! ⭐',
+  'Nina! Det kreative øyet ditt ser alt som må gjøres. Det er en SUPEREVNE! 🌟',
+  'Å FINNE oppgaven er halve jobben. Dere er allerede halvveis! 💪',
+  'Ny oppgave funnet! Dere ser badet for seg — nå gjør vi det til virkelighet! 🚀',
+  'Nina — du er kreativ OG strukturert. Det er sjeldenhet! Badet er i gode hender! ✨',
+  'Nina vet nøyaktig hva som skal til. Det kreative blikket ditt er gull verdt! 🎨',
+  'Planleggere er vinnere. Dere planlegger. Ergo: vinnere! 🏆',
+  'En ny oppgave på lista = ett steg nærmere drømmebad! 🛁',
+  'Stig og Nina planlegger som proffene! Jeg er imponert — og det skjer ikke ofte.',
+  'Nina — det kreative + det praktiske. Du har begge deler! Stol på det! 💡',
+  'Å se hva som mangler er en kunst. Nina er kunstner. Bevist nok en gang! 🎨',
+  'Stig, du trenger ikke gjøre alt selv — men dere VET hva som trengs! Bra!',
+  'Hvert gjøremål dere finner er bevis på at dette prosjektet er i gode hender! 🙌',
+];
+
 const PRAISE_BEGGE = [
   'Supert samarbeid! 🎉',
   'Teamwork makes the dream work! ✨',
@@ -82,6 +99,7 @@ export default function App() {
   const [lastReversalTime, setLastReversalTime] = useState<number>(
     () => Number(localStorage.getItem(REVERSAL_TS_KEY) ?? 0)
   );
+  const [piskenTrigger, setPiskenTrigger] = useState<{ msg: string } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function recordProgress() {
@@ -168,12 +186,18 @@ export default function App() {
   const completedCount = allItems.filter(i => i.done).length;
 
   // Task CRUD
+  function triggerCreationMessage() {
+    const msg = CREATION_MESSAGES[Math.floor(Math.random() * CREATION_MESSAGES.length)];
+    setPiskenTrigger({ msg });
+  }
+
   async function handleTaskSave(id: string | null, data: Omit<Task, 'id' | 'done' | 'created_at' | 'sort_order'>) {
     if (id) {
       await supabase.from('tasks').update(data).eq('id', id);
     } else {
       const now = Date.now();
       await supabase.from('tasks').insert({ id: uid(), done: false, created_at: now, sort_order: now, ...data });
+      triggerCreationMessage();
     }
   }
   async function handleTaskDelete(id: string) {
@@ -205,6 +229,7 @@ export default function App() {
     } else {
       const now = Date.now();
       await supabase.from('shop_items').insert({ id: uid(), bought: false, created_at: now, sort_order: now, ...data });
+      triggerCreationMessage();
     }
   }
   async function handleShopDelete(id: string) {
@@ -276,6 +301,7 @@ export default function App() {
           shopItems={shopItems}
           lastProgressTime={lastProgressTime}
           lastReversalTime={lastReversalTime}
+          piskenTrigger={piskenTrigger}
           onTaskToggle={handleTaskToggle}
           onTaskSave={handleTaskSave}
           onTaskDelete={handleTaskDelete}

@@ -40,6 +40,10 @@ const MESSAGES: Record<Mood, string[]> = {
     'Jeg er så stolt at jeg nesten glemmer pisken! NESTEN.',
     'Nina! Det er AKKURAT slik du gjør det! Start, ta valg, se resultater! Strålende! 🌟',
     'Stig er kanskje ikke mest handy, men han er flink på alt det andre. OG han hjalp til her! 💪',
+    'Nina — du er kreativ OG handlekraftig. Den kombinasjonen er USLÅELIG! ✨',
+    'Det kreative blikket til Nina + Stigs organisering = drømmekombo! 🎨🔧',
+    'Nina! Du vet instinktivt hva badet trenger. Stol på deg selv — du har alltid hatt det! 🌟',
+    'Nina er beviset på at kreative mennesker også er de beste håndverkerne! 💪',
   ],
   fornoyd: [
     'Bra jobbet! Jeg er faktisk fornøyd. Fortsett!',
@@ -53,6 +57,9 @@ const MESSAGES: Record<Mood, string[]> = {
     'Nina — dette blir BRA. Du vet det. Jeg vet det. Bare fortsett å ta valg! ✅',
     'Stig trenger ikke å kunne alt selv. Han er best på å organisere folk som KAN. Gjør det!',
     'Dere er på rett vei. Akkurat som Liverpool er på vei… et sted.',
+    'Nina, du har alltid hatt den kreative gnisten. Badet merker det allerede! 🎨',
+    'Nina — du er mer handy enn du tror. Det kreative øyet ditt er halvparten av jobben! 🔧',
+    'Det tar mot å starte. Nina har det motet. Stig henger med. Bra jobbet begge to!',
   ],
   noytral: [
     'Greit nok. Men nå har det gått en stund siden sist…',
@@ -141,9 +148,10 @@ interface Props {
   pendingTasks: Task[];
   pendingShop: ShopItem[];
   moodOverride?: Mood | null;
+  forcedMessage?: { msg: string } | null;
 }
 
-export default function AnePisken({ lastProgressTime, lastReversalTime, pendingTasks, pendingShop, moodOverride }: Props) {
+export default function AnePisken({ lastProgressTime, lastReversalTime, pendingTasks, pendingShop, moodOverride, forcedMessage }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [closing, setClosing] = useState(false);
   const [imgErr, setImgErr] = useState(false);
@@ -163,6 +171,13 @@ export default function AnePisken({ lastProgressTime, lastReversalTime, pendingT
     const t = setTimeout(() => { setMessage(null); setClosing(false); }, 280);
     return () => clearTimeout(t);
   }, [closing]);
+
+  // Auto-open overlay when a forced message arrives (new task/shop item added)
+  useEffect(() => {
+    if (!forcedMessage) return;
+    setClosing(false);
+    setMessage(forcedMessage.msg);
+  }, [forcedMessage]);
 
   const img = (cls: string) => !imgErr ? (
     <img
