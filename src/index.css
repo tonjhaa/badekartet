@@ -329,6 +329,7 @@ body {
 }
 .map-wrap::before {
   content: ''; position: absolute; inset: 0; border-radius: 28px;
+  pointer-events: none;
   background-image:
     repeating-linear-gradient(0deg, rgba(10,191,188,.045) 0px, rgba(10,191,188,.045) 1px, transparent 1px, transparent 36px),
     repeating-linear-gradient(90deg, rgba(10,191,188,.045) 0px, rgba(10,191,188,.045) 1px, transparent 1px, transparent 36px);
