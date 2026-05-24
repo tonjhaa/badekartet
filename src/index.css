@@ -296,7 +296,7 @@ body {
   background: rgba(255,255,255,.5); border: 3px solid rgba(255,255,255,.9);
   border-radius: 28px; padding: 16px 8px 20px;
   backdrop-filter: blur(8px); box-shadow: 0 8px 32px rgba(0,100,150,.12);
-  position: relative; overflow: hidden;
+  position: relative; overflow: visible;
 }
 .map-wrap::before {
   content: ''; position: absolute; inset: 0; border-radius: 28px;
