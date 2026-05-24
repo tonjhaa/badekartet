@@ -171,6 +171,7 @@ export default function MapPage({
             lastProgressTime={lastProgressTime}
             lastReversalTime={lastReversalTime}
             jubilantUntil={jubilantUntil}
+            completedCount={completedCount}
             pendingTasks={pendingTasks}
             pendingShop={pendingShop}
             forcedMessage={piskenTrigger}

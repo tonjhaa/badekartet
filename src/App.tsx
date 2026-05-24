@@ -104,6 +104,7 @@ export default function App() {
   const [lastReversalTime, setLastReversalTime] = useState<number>(
     () => Number(localStorage.getItem(REVERSAL_TS_KEY) ?? 0)
   );
+  const prevProgressTimeRef = useRef<number>(Number(localStorage.getItem(PROGRESS_TS_KEY) ?? 0));
   const [jubilantUntil, setJubilantUntil] = useState<number>(0);
   const [piskenTrigger, setPiskenTrigger] = useState<{ msg: string } | null>(null);
   const [showCompletion, setShowCompletion] = useState(
@@ -219,15 +220,17 @@ export default function App() {
 
   function recordProgress() {
     const now = Date.now();
+    prevProgressTimeRef.current = lastProgressTime;
     localStorage.setItem(PROGRESS_TS_KEY, String(now));
     setLastProgressTime(now);
     setJubilantUntil(now + 60 * 60 * 1000);
   }
 
-  function recordReversal() {
-    const now = Date.now();
-    localStorage.setItem(REVERSAL_TS_KEY, String(now));
-    setLastReversalTime(now);
+  function recordUndo() {
+    const prev = prevProgressTimeRef.current;
+    localStorage.setItem(PROGRESS_TS_KEY, String(prev));
+    setLastProgressTime(prev);
+    setJubilantUntil(0);
   }
 
   function celebrateProgress() {
@@ -342,7 +345,7 @@ export default function App() {
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
         if (isLast) setTimeout(() => setShowCompletion(true), 3200);
       } else {
-        recordReversal();
+        recordUndo();
         if (!walkAnim && completedCount > 0) setWalkAnim({ from: completedCount, to: completedCount - 1 });
       }
     }
@@ -380,7 +383,7 @@ export default function App() {
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
         if (isLast) setTimeout(() => setShowCompletion(true), 3200);
       } else {
-        recordReversal();
+        recordUndo();
         if (!walkAnim && completedCount > 0) setWalkAnim({ from: completedCount, to: completedCount - 1 });
       }
     }

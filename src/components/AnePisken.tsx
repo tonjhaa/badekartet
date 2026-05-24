@@ -197,13 +197,14 @@ interface Props {
   lastProgressTime: number;
   lastReversalTime: number;
   jubilantUntil: number;
+  completedCount: number;
   pendingTasks: Task[];
   pendingShop: ShopItem[];
   forcedMessage?: { msg: string } | null;
   hasOverdueItems?: boolean;
 }
 
-export default function AnePisken({ lastProgressTime, lastReversalTime, jubilantUntil, pendingTasks, pendingShop, forcedMessage, hasOverdueItems }: Props) {
+export default function AnePisken({ lastProgressTime, lastReversalTime, jubilantUntil, completedCount, pendingTasks, pendingShop, forcedMessage, hasOverdueItems }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [closing, setClosing] = useState(false);
   const [imgErr, setImgErr] = useState(false);
@@ -211,11 +212,13 @@ export default function AnePisken({ lastProgressTime, lastReversalTime, jubilant
 
   const isJubilant = Date.now() < jubilantUntil;
   const baseMood = getMood(lastProgressTime, lastReversalTime);
-  const mood: Mood = isJubilant
-    ? 'jubler'
-    : hasOverdueItems
-      ? MOOD_ORDER[Math.max(MOOD_ORDER.indexOf(baseMood), MOOD_ORDER.indexOf('rasende'))]
-      : baseMood;
+  const mood: Mood = completedCount === 0
+    ? 'noytral'
+    : isJubilant
+      ? 'jubler'
+      : hasOverdueItems
+        ? MOOD_ORDER[Math.max(MOOD_ORDER.indexOf(baseMood), MOOD_ORDER.indexOf('rasende'))]
+        : baseMood;
 
   // Reset imgErr when mood changes
   useEffect(() => { setImgErr(false); }, [mood]);
