@@ -9,6 +9,7 @@ import DynamicMap from './DynamicMap';
 import ItemModal from './ItemModal';
 import AnePisken from './AnePisken';
 import type { MapItem, Task, ShopItem } from '../types';
+import { isOverdue } from '../utils/deadline';
 
 
 const LEVEL_TITLES = [
@@ -69,25 +70,27 @@ interface Props {
   onWalkDone?: () => void;
 }
 
-function SortableQtRow({ id, done, name, deadline, onToggle, onEdit }: {
-  id: string; done: boolean; name: string; deadline?: string;
+function SortableQtRow({ id, done, name, deadline, overdue, onToggle, onEdit }: {
+  id: string; done: boolean; name: string; deadline?: string; overdue?: boolean;
   onToggle: () => void; onEdit: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
   const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1 };
   return (
-    <div ref={setNodeRef} style={style} className={`quick-task-row${done ? ' done' : ''}`}>
+    <div ref={setNodeRef} style={style} className={`quick-task-row${done ? ' done' : ''}${overdue ? ' overdue' : ''}`}>
       <span className="qt-drag-handle" {...attributes} {...listeners}>
         <i className="fa-solid fa-grip-lines" />
       </span>
-      <div className={`qt-circle${done ? ' checked' : ''}`} onClick={onToggle}>
+      <div className={`qt-circle${done ? ' checked' : ''}${overdue ? ' overdue' : ''}`} onClick={onToggle}>
         {done
           ? <i className="fa-solid fa-check" style={{ fontSize: 12 }} />
-          : <i className="fa-solid fa-check" style={{ fontSize: 12, opacity: 0 }} />}
+          : overdue
+            ? <i className="fa-solid fa-triangle-exclamation" style={{ fontSize: 11 }} />
+            : <i className="fa-solid fa-check" style={{ fontSize: 12, opacity: 0 }} />}
       </div>
       <div className="qt-info" onClick={onToggle}>
-        <span className={`qt-name${done ? ' done' : ''}`}>{name}</span>
-        {deadline && <span className="qt-meta">{formatDeadline(deadline)}</span>}
+        <span className={`qt-name${done ? ' done' : ''}${overdue ? ' overdue' : ''}`}>{name}</span>
+        {deadline && <span className={`qt-meta${overdue ? ' overdue' : ''}`}>{formatDeadline(deadline)}</span>}
       </div>
       <button className="qt-edit-btn" onClick={onEdit} title="Endre">
         <i className="fa-solid fa-pen" />
@@ -112,6 +115,10 @@ export default function MapPage({
   const doneTasks = tasks.filter(t => t.done);
   const pendingShop = shopItems.filter(s => !s.bought);
   const doneShop = shopItems.filter(s => s.bought);
+
+  const overdueTasks = new Set(pendingTasks.filter(t => isOverdue(t.deadline)).map(t => t.id));
+  const overdueShop = new Set(pendingShop.filter(s => isOverdue(s.deadline ?? '')).map(s => s.id));
+  const hasOverdueItems = overdueTasks.size > 0 || overdueShop.size > 0;
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -162,6 +169,7 @@ export default function MapPage({
             pendingTasks={pendingTasks}
             pendingShop={pendingShop}
             forcedMessage={piskenTrigger}
+            hasOverdueItems={hasOverdueItems}
           />
         </div>
       </div>
@@ -189,6 +197,7 @@ export default function MapPage({
                   <SortableQtRow
                     key={t.id} id={t.id} done={false}
                     name={t.name} deadline={t.deadline}
+                    overdue={overdueTasks.has(t.id)}
                     onToggle={() => onTaskToggle(t.id)}
                     onEdit={() => setModal({ kind: 'task', item: t })}
                   />
@@ -222,6 +231,7 @@ export default function MapPage({
                   <SortableQtRow
                     key={s.id} id={s.id} done={false}
                     name={s.name} deadline={s.deadline}
+                    overdue={overdueShop.has(s.id)}
                     onToggle={() => onShopToggle(s.id)}
                     onEdit={() => setModal({ kind: 'shop', item: s })}
                   />

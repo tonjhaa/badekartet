@@ -199,13 +199,17 @@ interface Props {
   pendingTasks: Task[];
   pendingShop: ShopItem[];
   forcedMessage?: { msg: string } | null;
+  hasOverdueItems?: boolean;
 }
 
-export default function AnePisken({ lastProgressTime, lastReversalTime, pendingTasks, pendingShop, forcedMessage }: Props) {
+export default function AnePisken({ lastProgressTime, lastReversalTime, pendingTasks, pendingShop, forcedMessage, hasOverdueItems }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [closing, setClosing] = useState(false);
   const [imgErr, setImgErr] = useState(false);
-  const mood = getMood(lastProgressTime, lastReversalTime);
+  const baseMood = getMood(lastProgressTime, lastReversalTime);
+  const mood: Mood = hasOverdueItems
+    ? MOOD_ORDER[Math.max(MOOD_ORDER.indexOf(baseMood), MOOD_ORDER.indexOf('rasende'))]
+    : baseMood;
 
   const open = useCallback(() => {
     setMessage(getContextMessage(mood, pendingTasks, pendingShop));

@@ -4,6 +4,9 @@ import './index.css';
 import { supabase } from './lib/supabase';
 import type { Task, ShopItem, MapItem, Assignee } from './types';
 import MapPage from './components/MapPage';
+import CompletionScreen from './components/CompletionScreen';
+import OverdueRain from './components/OverdueRain';
+import { isOverdue } from './utils/deadline';
 
 const PROGRESS_PRAISE = [
   'Dere er ustoppelige! 🚀',
@@ -100,13 +103,15 @@ export default function App() {
     () => Number(localStorage.getItem(REVERSAL_TS_KEY) ?? 0)
   );
   const [piskenTrigger, setPiskenTrigger] = useState<{ msg: string } | null>(null);
+  const [showCompletion, setShowCompletion] = useState(
+    () => new URLSearchParams(window.location.search).has('celebrate')
+  );
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function playFanfare() {
     try {
       const ctx = new AudioContext();
-      // Short triumphant fanfare: four ascending notes
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5 E5 G5 C6
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       const durations = [0.12, 0.12, 0.12, 0.32];
       let t = ctx.currentTime + 0.04;
       notes.forEach((freq, i) => {
@@ -122,6 +127,85 @@ export default function App() {
         t += durations[i] * 0.85;
       });
       setTimeout(() => ctx.close(), 2000);
+    } catch {}
+  }
+
+  function playVictoryMusic() {
+    try {
+      const ctx = new AudioContext();
+      const base = ctx.currentTime + 0.05;
+
+      function n(freq: number, t: number, dur: number, vol = 0.18, type: OscillatorType = 'triangle') {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = type; osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(vol, t + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.9);
+        osc.start(t); osc.stop(t + dur);
+      }
+
+      const C3=130.81, G3=196, F3=174.61, C4=261.63, G4=392, F4=349.23;
+      const C5=523.25, D5=587.33, E5=659.25, F5=698.46, G5=783.99, A5=880, B5=987.77, C6=1046.5;
+
+      let t = base;
+      // Fanfare
+      n(C5,t,0.25,0.28); n(E5,t+0.22,0.25,0.28); n(G5,t+0.44,0.25,0.28); n(C6,t+0.66,1.0,0.32);
+      n(C3,t,0.6,0.12,'sine'); n(G3,t+0.6,0.4,0.12,'sine'); n(C4,t+1.0,0.6,0.12,'sine');
+      t += 1.7;
+
+      // Melody A
+      const mA: [number,number,number][] = [
+        [C5,0,.3],[E5,.3,.3],[G5,.6,.3],[C6,.9,.65],
+        [A5,1.6,.3],[G5,1.9,.3],[E5,2.2,.65],
+      ];
+      // Melody B
+      const mB: [number,number,number][] = [
+        [C5,0,.25],[D5,.25,.25],[E5,.5,.25],[F5,.75,.25],
+        [G5,1.0,.5],[A5,1.5,.25],[C6,1.75,.8],
+      ];
+      // Bass A
+      const bA: [number,number,number][] = [
+        [C4,0,.8],[G3,.9,.7],[F4,1.6,.65],[C4,2.2,.7],
+      ];
+      // Bass B
+      const bB: [number,number,number][] = [
+        [G3,0,.8],[C4,.8,.5],[F3,1.3,.5],[G4,1.8,.95],
+      ];
+
+      mA.forEach(([f,dt,d]) => n(f,t+dt,d,0.20));
+      bA.forEach(([f,dt,d]) => n(f,t+dt,d,0.11,'sine'));
+      t += 2.9;
+      mB.forEach(([f,dt,d]) => n(f,t+dt,d,0.20));
+      bB.forEach(([f,dt,d]) => n(f,t+dt,d,0.11,'sine'));
+      t += 2.7;
+
+      // Repeat with harmony
+      mA.forEach(([f,dt,d]) => { n(f,t+dt,d,0.18); if(f>500) n(f*0.749,t+dt,d,0.09); });
+      bA.forEach(([f,dt,d]) => n(f,t+dt,d,0.12,'sine'));
+      t += 2.9;
+      mB.forEach(([f,dt,d]) => { n(f,t+dt,d,0.18); if(f>500) n(f*0.749,t+dt,d,0.09); });
+      bB.forEach(([f,dt,d]) => n(f,t+dt,d,0.12,'sine'));
+      t += 2.7;
+
+      // Running scales
+      const scaleUp = [C5,D5,E5,F5,G5,A5,B5,C6];
+      scaleUp.forEach((f,i) => n(f,t+i*0.12,0.14,0.18));
+      t += 1.05;
+      [...scaleUp].reverse().forEach((f,i) => n(f,t+i*0.12,0.14,0.18));
+      t += 1.05;
+      scaleUp.forEach((f,i) => n(f,t+i*0.10,0.12,0.20));
+      t += 0.9;
+
+      // Grand finale chords
+      [C5,E5,G5,C6,C3].forEach(f => n(f,t,0.5,0.20));      t += 0.55;
+      [F5,A5,C6,F4].forEach(f => n(f,t,0.5,0.20));          t += 0.55;
+      [G5,B5,D5,G4].forEach(f => n(f,t,0.5,0.20));          t += 0.55;
+      [C5,E5,G5].forEach((f,i) => n(f,t-0.35+i*0.12,0.12,0.15));
+      [C5,E5,G5,C6,C4,C3].forEach(f => n(f,t,3.2,0.24));
+
+      setTimeout(() => ctx.close(), 24000);
     } catch {}
   }
 
@@ -207,6 +291,13 @@ export default function App() {
   ].sort((a, b) => a.created_at - b.created_at);
 
   const completedCount = allItems.filter(i => i.done).length;
+  const hasOverdueItems = allItems.some(item => {
+    if (item.done) return false;
+    const src = item.kind === 'task'
+      ? tasks.find(t => t.id === item.id)?.deadline ?? ''
+      : shopItems.find(s => s.id === item.id)?.deadline ?? '';
+    return isOverdue(src);
+  });
 
   // Task CRUD
   function triggerCreationMessage() {
@@ -230,12 +321,17 @@ export default function App() {
     const t = tasks.find(t => t.id === id);
     if (t) {
       const nowDone = !t.done;
-      if (nowDone) playFanfare(); // must run synchronously before any await
+      const isLast = nowDone && completedCount + 1 === allItems.length;
+      if (nowDone) {
+        if (isLast) playVictoryMusic();
+        else playFanfare();
+      }
       await supabase.from('tasks').update({ done: nowDone }).eq('id', id);
       if (nowDone) {
         celebrate(t.assignee);
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
+        if (isLast) setTimeout(() => setShowCompletion(true), 3200);
       } else {
         recordReversal();
         if (!walkAnim && completedCount > 0) setWalkAnim({ from: completedCount, to: completedCount - 1 });
@@ -263,12 +359,17 @@ export default function App() {
     const s = shopItems.find(s => s.id === id);
     if (s) {
       const nowBought = !s.bought;
-      if (nowBought) playFanfare(); // must run synchronously before any await
+      const isLast = nowBought && completedCount + 1 === allItems.length;
+      if (nowBought) {
+        if (isLast) playVictoryMusic();
+        else playFanfare();
+      }
       await supabase.from('shop_items').update({ bought: nowBought }).eq('id', id);
       if (nowBought) {
         celebrate(s.assignee);
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
+        if (isLast) setTimeout(() => setShowCompletion(true), 3200);
       } else {
         recordReversal();
         if (!walkAnim && completedCount > 0) setWalkAnim({ from: completedCount, to: completedCount - 1 });
@@ -293,6 +394,8 @@ export default function App() {
       <div className="sky-bg" />
       <div className="cloud c1" /><div className="cloud c2" /><div className="cloud c3" />
       <div className="sun" /><div className="grass" />
+      {hasOverdueItems && <OverdueRain />}
+      {showCompletion && <CompletionScreen onClose={() => setShowCompletion(false)} />}
 
       {toast && (
         <div className="praise-toast" key={toast + Date.now()}>
