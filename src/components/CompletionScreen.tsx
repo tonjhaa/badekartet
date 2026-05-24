@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti';
 
 interface Props {
   onClose: () => void;
+  onDiplom?: () => void;
 }
 
 const PRAISE_PARAGRAPHS = [
@@ -21,7 +22,7 @@ const PRAISE_PARAGRAPHS = [
 
 const FLOATERS = ['⭐', '🛁', '✨', '🎉', '🏆', '💪', '🌟', '🎊', '❤️', '🥂', '🎂', '🎈'];
 
-export default function CompletionScreen({ onClose }: Props) {
+export default function CompletionScreen({ onClose, onDiplom }: Props) {
   useEffect(() => {
     function burst() {
       confetti({
@@ -79,9 +80,16 @@ export default function CompletionScreen({ onClose }: Props) {
           </div>
         </div>
 
-        <button className="completion-close" onClick={onClose}>
-          Lukk feiringen 🎉
-        </button>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          {onDiplom && (
+            <button className="completion-close" style={{ flex: 1, background: 'linear-gradient(135deg, #C9A227, #F5D060)', boxShadow: '0 4px 0 #7A5000' }} onClick={onDiplom}>
+              Vis diplomer 🏅
+            </button>
+          )}
+          <button className="completion-close" style={{ flex: 1 }} onClick={onClose}>
+            Lukk feiringen 🎉
+          </button>
+        </div>
       </div>
     </div>,
     document.body

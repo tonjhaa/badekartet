@@ -5,6 +5,7 @@ import { supabase } from './lib/supabase';
 import type { Task, ShopItem, MapItem, Assignee } from './types';
 import MapPage from './components/MapPage';
 import CompletionScreen from './components/CompletionScreen';
+import DiplomaScreen from './components/DiplomaScreen';
 import OverdueRain from './components/OverdueRain';
 import { isOverdue } from './utils/deadline';
 
@@ -107,6 +108,9 @@ export default function App() {
     () => new URLSearchParams(window.location.search).has('celebrate')
   );
   const forceOverdue = new URLSearchParams(window.location.search).has('overdue');
+  const [showDiploma, setShowDiploma] = useState(
+    () => new URLSearchParams(window.location.search).has('diplom')
+  );
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function playFanfare() {
@@ -396,7 +400,8 @@ export default function App() {
       <div className="cloud c1" /><div className="cloud c2" /><div className="cloud c3" />
       <div className="sun" /><div className="grass" />
       {(hasOverdueItems || forceOverdue) && <OverdueRain />}
-      {showCompletion && <CompletionScreen onClose={() => setShowCompletion(false)} />}
+      {showCompletion && <CompletionScreen onClose={() => setShowCompletion(false)} onDiplom={() => { setShowCompletion(false); setShowDiploma(true); }} />}
+      {showDiploma && <DiplomaScreen onClose={() => setShowDiploma(false)} />}
 
       {toast && (
         <div className="praise-toast" key={toast + Date.now()}>
