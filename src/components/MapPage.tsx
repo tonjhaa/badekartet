@@ -19,9 +19,14 @@ function levelTitle(pct: number) {
   return LEVEL_TITLES[0];
 }
 
-interface Props { items: MapItem[]; completedCount: number; }
+interface Props {
+  items: MapItem[];
+  completedCount: number;
+  walkAnim?: { from: number; to: number } | null;
+  onWalkDone?: () => void;
+}
 
-export default function MapPage({ items, completedCount }: Props) {
+export default function MapPage({ items, completedCount, walkAnim, onWalkDone }: Props) {
   const total = items.length;
   const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
   const remaining = total - completedCount;
@@ -46,7 +51,7 @@ export default function MapPage({ items, completedCount }: Props) {
       </div>
 
       <div className="map-wrap">
-        <DynamicMap items={items} completedCount={completedCount} />
+        <DynamicMap items={items} completedCount={completedCount} walkAnim={walkAnim} onWalkDone={onWalkDone} />
       </div>
     </>
   );

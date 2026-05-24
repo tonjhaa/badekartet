@@ -1,13 +1,14 @@
+import { useState, useEffect, useRef } from 'react';
 import type { MapItem } from '../types';
 
 const STOP_ICONS: Record<string, string> = {
-  shop: '',   // cart
-  task0: '',  // phone
-  task1: '',  // wrench
-  task2: '',  // broom
-  task3: '',  // hammer
-  task4: '',  // shower
-  task5: '',  // paw (fun wildcard)
+  shop: '',   // cart
+  task0: '',  // phone
+  task1: '',  // wrench
+  task2: '',  // broom
+  task3: '',  // hammer
+  task4: '',  // shower
+  task5: '',  // paw (fun wildcard)
 };
 
 function stopIcon(item: MapItem, taskIndex: number) {
@@ -27,15 +28,60 @@ function curvePath(from: { x: number; y: number }, to: { x: number; y: number })
 interface Props {
   items: MapItem[];
   completedCount: number;
+  walkAnim?: { from: number; to: number } | null;
+  onWalkDone?: () => void;
 }
 
-export default function DynamicMap({ items, completedCount }: Props) {
+export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone }: Props) {
   const total = items.length;
   const activeIdx = Math.min(completedCount, total - 1);
   const goalPos = getPos(total);
   const svgHeight = goalPos.y + 80;
 
+  const [charAnimPos, setCharAnimPos] = useState<{ x: number; y: number } | null>(null);
+  const rafId = useRef(0);
+  const onWalkDoneRef = useRef(onWalkDone);
+  onWalkDoneRef.current = onWalkDone;
+
+  useEffect(() => {
+    if (!walkAnim || total === 0) return;
+
+    const fromPos = getPos(Math.min(walkAnim.from, total - 1));
+    const toPos = getPos(Math.min(walkAnim.to, total - 1));
+
+    if (fromPos.x === toPos.x && fromPos.y === toPos.y) {
+      onWalkDoneRef.current?.();
+      return;
+    }
+
+    const start = performance.now();
+    const duration = 1800;
+
+    function tick(now: number) {
+      const t = Math.min(1, (now - start) / duration);
+      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      setCharAnimPos({
+        x: fromPos.x + (toPos.x - fromPos.x) * ease,
+        y: fromPos.y + (toPos.y - fromPos.y) * ease,
+      });
+      if (t < 1) {
+        rafId.current = requestAnimationFrame(tick);
+      } else {
+        setCharAnimPos(null);
+        onWalkDoneRef.current?.();
+      }
+    }
+
+    rafId.current = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(rafId.current);
+      setCharAnimPos(null);
+    };
+  }, [walkAnim, total]);
+
   let taskCounter = 0;
+
+  const charPos = charAnimPos ?? (total > 0 ? getPos(activeIdx) : null);
 
   return (
     <svg
@@ -51,7 +97,7 @@ export default function DynamicMap({ items, completedCount }: Props) {
           <stop offset="0%" stopColor="#FFE566" /><stop offset="100%" stopColor="#FF8C42" />
         </radialGradient>
         <radialGradient id="gS" cx="35%" cy="30%">
-          <stop offset="0%" stopColor="#B8E8FF" /><stop offset="50%" stopColor="#0ABFBC" /><stop offset="100%" stopColor="#005f8e" />
+          <stop offset="0%" stopColor="#dce9f0" /><stop offset="50%" stopColor="#0ABFBC" /><stop offset="100%" stopColor="#005f8e" />
         </radialGradient>
         <radialGradient id="gL" cx="35%" cy="30%">
           <stop offset="0%" stopColor="#dce9f0" /><stop offset="100%" stopColor="#b0c8d8" />
@@ -113,7 +159,7 @@ export default function DynamicMap({ items, completedCount }: Props) {
                 <circle cx="20" cy="-20" r="11" fill="#FFD93D" stroke="white" strokeWidth="2.5" />
                 <text x="20" y="-20" textAnchor="middle" dominantBaseline="middle"
                   fontFamily="'Font Awesome 6 Free'" fontWeight="900" fontSize="9" fill="#2d6a4f">
-                  {''}
+                  {''}
                 </text>
               </>
             )}
@@ -135,24 +181,32 @@ export default function DynamicMap({ items, completedCount }: Props) {
         <ellipse cx="-12" cy="-16" rx="11" ry="6" fill="rgba(255,255,255,.3)" transform="rotate(-25,-12,-16)" />
         <text x="0" y="5" textAnchor="middle" dominantBaseline="middle"
           fontFamily="'Font Awesome 6 Free'" fontWeight="900" fontSize="18" fill="rgba(255,255,255,.9)">
-          {''}
+          {''}
         </text>
         <text x="0" y="50" textAnchor="middle" fontFamily="Baloo 2,cursive" fontSize="10" fontWeight="800" fill="#3a7ca5">
           Nytt bad!
         </text>
       </g>
 
-      {/* Nina & Stig at active stop */}
-      {total > 0 && (() => {
-        const { x, y } = getPos(activeIdx);
+      {/* Walk glow */}
+      {charAnimPos && charPos && (
+        <circle cx={charPos.x} cy={charPos.y} r="45" fill="none" stroke="#FFD93D" strokeWidth="3">
+          <animate attributeName="r" values="45;62;45" dur="0.7s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.6;0;0.6" dur="0.7s" repeatCount="indefinite" />
+        </circle>
+      )}
+
+      {/* Nina & Stig — symmetrically flanking the active node */}
+      {total > 0 && charPos && (() => {
+        const { x, y } = charPos;
         return (
           <>
             <g className="map-stig" filter="url(#csh)">
-              <image href={`${import.meta.env.BASE_URL}stig.png`} x={x + 5} y={y - 75} width="52" height="64" style={{ mixBlendMode: 'multiply' }} />
+              <image href={`${import.meta.env.BASE_URL}stig.png`} x={x + 40} y={y - 75} width="52" height="64" style={{ mixBlendMode: 'multiply' }} />
             </g>
             <g className="map-nina" filter="url(#csh)">
-              <image href={`${import.meta.env.BASE_URL}nina.png`} x={x - 72} y={y - 70} width="48" height="60"
-                transform={`translate(${(x - 72) * 2 + 48}, 0) scale(-1, 1)`}
+              <image href={`${import.meta.env.BASE_URL}nina.png`} x={x - 88} y={y - 70} width="48" height="60"
+                transform={`translate(${(x - 88) * 2 + 48}, 0) scale(-1, 1)`}
                 style={{ mixBlendMode: 'multiply' }} />
             </g>
           </>

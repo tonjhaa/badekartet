@@ -6,6 +6,16 @@ import type { Task, ShopItem, MapItem, Assignee } from './types';
 import MapPage from './components/MapPage';
 import TasksPage from './components/TasksPage';
 
+const PROGRESS_PRAISE = [
+  'Dere er ustoppelige! 🚀',
+  'Badekartet nærmer seg! 🛁',
+  'Kjempejobb begge to! ⭐',
+  'Fremover på veikartet! 🎉',
+  'Supert samarbeid! 💪',
+  'Strålende innsats! ✨',
+  'Ja! Det skjer nå! 🏆',
+];
+
 const PRAISE_BEGGE = [
   'Supert samarbeid! 🎉',
   'Teamwork makes the dream work! ✨',
@@ -64,7 +74,39 @@ export default function App() {
   const [shopItems, setShopItems] = useState<ShopItem[]>([]);
   const [ready, setReady] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [walkAnim, setWalkAnim] = useState<{ from: number; to: number } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastMapCount = useRef(-1);
+
+  function celebrateProgress() {
+    confetti({ particleCount: 160, spread: 110, origin: { y: 0.5 }, colors: ['#0ABFBC', '#FFD93D', '#FF6B6B', '#90E06A', '#48CAE4'] });
+    confetti({ particleCount: 60, angle: 60, spread: 60, origin: { x: 0, y: 0.6 }, colors: ['#FFD93D', '#FF6B6B'] });
+    confetti({ particleCount: 60, angle: 120, spread: 60, origin: { x: 1, y: 0.6 }, colors: ['#0ABFBC', '#90E06A'] });
+    const msg = PROGRESS_PRAISE[Math.floor(Math.random() * PROGRESS_PRAISE.length)];
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast(msg);
+    toastTimer.current = setTimeout(() => setToast(null), 3500);
+  }
+
+  function handleSetPage(newPage: 'map' | 'tasks') {
+    if (newPage === 'map' && page === 'tasks') {
+      const prev = lastMapCount.current < 0 ? completedCount : lastMapCount.current;
+      const gained = completedCount - prev;
+      if (gained > 0 && !walkAnim) {
+        setWalkAnim({ from: prev, to: completedCount });
+      }
+      lastMapCount.current = completedCount;
+    } else if (newPage === 'tasks') {
+      lastMapCount.current = completedCount;
+      setWalkAnim(null);
+    }
+    setPage(newPage);
+  }
+
+  function handleWalkDone() {
+    setWalkAnim(null);
+    celebrateProgress();
+  }
 
   function celebrate(assignee: Assignee) {
     confetti({
@@ -203,11 +245,11 @@ export default function App() {
         </div>
 
         <nav className="nav">
-          <button className={`nav-btn${page === 'map' ? ' active' : ''}`} onClick={() => setPage('map')}>Kartet</button>
-          <button className={`nav-btn${page === 'tasks' ? ' active' : ''}`} onClick={() => setPage('tasks')}>Gjøremål</button>
+          <button className={`nav-btn${page === 'map' ? ' active' : ''}`} onClick={() => handleSetPage('map')}>Kartet</button>
+          <button className={`nav-btn${page === 'tasks' ? ' active' : ''}`} onClick={() => handleSetPage('tasks')}>Gjøremål</button>
         </nav>
 
-        {page === 'map' && <MapPage items={allItems} completedCount={completedCount} />}
+        {page === 'map' && <MapPage items={allItems} completedCount={completedCount} walkAnim={walkAnim} onWalkDone={handleWalkDone} />}
         {page === 'tasks' && (
           <TasksPage
             tasks={tasks}
