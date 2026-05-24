@@ -3,15 +3,28 @@ import { createPortal } from 'react-dom';
 import type { Task, ShopItem } from '../types';
 
 type Mood = 'jubler' | 'fornoyd' | 'noytral' | 'irritert' | 'rasende';
+const MOOD_ORDER: Mood[] = ['jubler', 'fornoyd', 'noytral', 'irritert', 'rasende'];
 
-function getMood(lastProgressTime: number): Mood {
+function getMood(lastProgressTime: number, lastReversalTime: number): Mood {
   if (!lastProgressTime) return 'noytral'; // fresh start = neutral, not furious
   const hours = (Date.now() - lastProgressTime) / (1000 * 60 * 60);
-  if (hours < 1)   return 'jubler';
-  if (hours < 24)  return 'fornoyd';
-  if (hours < 72)  return 'noytral';
-  if (hours < 144) return 'irritert';
-  return 'rasende';
+  let mood: Mood;
+  if (hours < 1)   mood = 'jubler';
+  else if (hours < 24)  mood = 'fornoyd';
+  else if (hours < 72)  mood = 'noytral';
+  else if (hours < 144) mood = 'irritert';
+  else mood = 'rasende';
+
+  // Recent reversal pushes mood one step worse for 2 hours
+  if (lastReversalTime) {
+    const reversalHours = (Date.now() - lastReversalTime) / (1000 * 60 * 60);
+    if (reversalHours < 2) {
+      const idx = MOOD_ORDER.indexOf(mood);
+      mood = MOOD_ORDER[Math.min(idx + 1, MOOD_ORDER.length - 1)];
+    }
+  }
+
+  return mood;
 }
 
 const MESSAGES: Record<Mood, string[]> = {
@@ -124,16 +137,17 @@ const MOOD_FALLBACK: Record<Mood, string> = {
 
 interface Props {
   lastProgressTime: number;
+  lastReversalTime: number;
   pendingTasks: Task[];
   pendingShop: ShopItem[];
   moodOverride?: Mood | null;
 }
 
-export default function AnePisken({ lastProgressTime, pendingTasks, pendingShop, moodOverride }: Props) {
+export default function AnePisken({ lastProgressTime, lastReversalTime, pendingTasks, pendingShop, moodOverride }: Props) {
   const [message, setMessage] = useState<string | null>(null);
   const [closing, setClosing] = useState(false);
   const [imgErr, setImgErr] = useState(false);
-  const mood = moodOverride ?? getMood(lastProgressTime);
+  const mood = moodOverride ?? getMood(lastProgressTime, lastReversalTime);
 
   const open = useCallback(() => {
     setMessage(getContextMessage(mood, pendingTasks, pendingShop));

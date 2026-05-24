@@ -68,6 +68,7 @@ async function loadShop() {
 }
 
 const PROGRESS_TS_KEY = 'badekartet_last_progress';
+const REVERSAL_TS_KEY = 'badekartet_last_reversal';
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -78,12 +79,21 @@ export default function App() {
   const [lastProgressTime, setLastProgressTime] = useState<number>(
     () => Number(localStorage.getItem(PROGRESS_TS_KEY) ?? 0)
   );
+  const [lastReversalTime, setLastReversalTime] = useState<number>(
+    () => Number(localStorage.getItem(REVERSAL_TS_KEY) ?? 0)
+  );
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function recordProgress() {
     const now = Date.now();
     localStorage.setItem(PROGRESS_TS_KEY, String(now));
     setLastProgressTime(now);
+  }
+
+  function recordReversal() {
+    const now = Date.now();
+    localStorage.setItem(REVERSAL_TS_KEY, String(now));
+    setLastReversalTime(now);
   }
 
   function celebrateProgress() {
@@ -179,6 +189,7 @@ export default function App() {
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
       } else {
+        recordReversal();
         if (!walkAnim && completedCount > 0) setWalkAnim({ from: completedCount, to: completedCount - 1 });
       }
     }
@@ -209,6 +220,7 @@ export default function App() {
         recordProgress();
         if (!walkAnim) setWalkAnim({ from: completedCount, to: completedCount + 1 });
       } else {
+        recordReversal();
         if (!walkAnim && completedCount > 0) setWalkAnim({ from: completedCount, to: completedCount - 1 });
       }
     }
@@ -263,6 +275,7 @@ export default function App() {
           tasks={tasks}
           shopItems={shopItems}
           lastProgressTime={lastProgressTime}
+          lastReversalTime={lastReversalTime}
           onTaskToggle={handleTaskToggle}
           onTaskSave={handleTaskSave}
           onTaskDelete={handleTaskDelete}
