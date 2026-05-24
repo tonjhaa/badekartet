@@ -261,7 +261,8 @@ body {
 .map-layout .map-wrap { flex: 1; min-width: 0; }
 .map-layout .quick-tasks { width: 255px; flex-shrink: 0; margin-top: 0; }
 @media (max-width: 640px) {
-  .map-layout { flex-direction: column; }
+  .map-layout { flex-direction: column; align-items: stretch; }
+  .map-layout .map-wrap { width: 100%; }
   .map-layout .quick-tasks { width: 100%; }
 }
 
@@ -272,11 +273,12 @@ body {
   .game-header {
     width: calc(100% + 24px);
     margin-left: -12px;
-    margin-bottom: -36px;
+    margin-bottom: -44px;
   }
   .hc-img { width: 120px; }
   .hc:first-child { margin-right: -8px; }
   .hc:last-child { margin-left: -8px; }
+  .header-chars { top: auto; bottom: -10px; }
 
   .level-card { padding: 9px 12px 11px; }
   .level-card-inner { gap: 8px; }
