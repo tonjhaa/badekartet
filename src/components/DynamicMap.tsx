@@ -176,8 +176,8 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
     function tick(now: number) {
       const t = Math.min((now - start) / duration, 1);
       const e = ease(t);
-      // For reverse: characters go from toIdx→fromIdx direction, use (1-e) for bezier param
-      const be = isReverse ? (1 - e) : e;
+      // Characters always travel p0→p3 (fromIdx→toIdx); reverseness only affects road dashoffset
+      const be = e;
       const mt = 1 - be;
       const cx = mt*mt*mt*p0.x + 3*mt*mt*be*p1.x + 3*mt*be*be*p2.x + be*be*be*p3.x;
       const cy = mt*mt*mt*p0.y + 3*mt*mt*be*p1.y + 3*mt*be*be*p2.y + be*be*be*p3.y;
@@ -214,15 +214,15 @@ export default function DynamicMap({ items, completedCount, walkAnim, onWalkDone
     return () => { if (rafId.current) cancelAnimationFrame(rafId.current); };
   }, [walkAnim]);
 
-  // Rest position: during animation show where characters are heading
+  // Rest position: characters start from walkAnim.from (no optimistic jump)
+  // After animation ends walkAnim is null and completedCount reflects the updated value
   const restIdx = walkAnim
-    ? (isReverse ? walkAnim.to : Math.min(walkAnim.to, n - 1))
+    ? Math.min(Math.max(walkAnim.from, 0), n - 1)
     : Math.min(completedCount, n - 1);
   const rest = n > 0 ? getPos(Math.max(restIdx, 0)) : getPos(0);
 
-  // Freeze done road at walkAnim.from to prevent jumping ahead (forward)
-  // For reverse: freeze at walkAnim.from too (the segment being erased is in animSegRef)
-  const displayCount = walkAnim != null ? walkAnim.from : completedCount;
+  // Teal road frozen at the lower endpoint; animated segment covers the gap between endpoints
+  const displayCount = walkAnim != null ? Math.min(walkAnim.from, walkAnim.to) : completedCount;
   const donePath  = displayCount >= 1 && n >= 2 ? makePath(0, Math.min(displayCount, n - 1)) : '';
   const greyPath  = n >= 2 ? makePath(Math.min(displayCount, n - 1), n - 1) : '';
   // Animated segment: always from the lower index to the higher index
