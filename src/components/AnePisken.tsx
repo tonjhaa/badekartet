@@ -128,37 +128,53 @@ interface Props {
 }
 
 export default function AnePisken({ lastProgressTime, pendingTasks, pendingShop }: Props) {
-  const [bubble, setBubble] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [imgErr, setImgErr] = useState(false);
   const mood = getMood(lastProgressTime);
 
   const handleClick = useCallback(() => {
-    if (bubble) { setBubble(null); return; }
-    setBubble(getContextMessage(mood, pendingTasks, pendingShop));
-  }, [bubble, mood, pendingTasks, pendingShop]);
+    if (message) { setMessage(null); return; }
+    setMessage(getContextMessage(mood, pendingTasks, pendingShop));
+  }, [message, mood, pendingTasks, pendingShop]);
 
   return (
-    <div className="ane-wrap" onClick={handleClick} title="Klikk for beskjed fra Pisken">
-      {bubble && (
-        <div className="ane-bubble">
-          <div className="ane-bubble-text">{bubble}</div>
-          <div className="ane-bubble-tail" />
+    <>
+      <div className="ane-wrap" onClick={handleClick} title="Klikk for beskjed fra Pisken">
+        <div className={`ane-figure ane-${mood}`}>
+          {!imgErr ? (
+            <img
+              key={mood}
+              src={`${import.meta.env.BASE_URL}${MOOD_IMG[mood]}`}
+              alt={`Ane - ${mood}`}
+              className="ane-img"
+              onError={() => setImgErr(true)}
+            />
+          ) : (
+            <div className="ane-fallback">{MOOD_FALLBACK[mood]}</div>
+          )}
+        </div>
+        <div className="ane-name">Pisken</div>
+      </div>
+
+      {message && (
+        <div className="ane-overlay-bg" onClick={() => setMessage(null)}>
+          <div className={`ane-overlay ane-${mood}`}>
+            {!imgErr ? (
+              <img
+                src={`${import.meta.env.BASE_URL}${MOOD_IMG[mood]}`}
+                alt={`Ane - ${mood}`}
+                className="ane-overlay-img"
+              />
+            ) : (
+              <div className="ane-overlay-fallback">{MOOD_FALLBACK[mood]}</div>
+            )}
+            <div className="ane-overlay-bubble">
+              <div className="ane-overlay-text">{message}</div>
+            </div>
+            <div className="ane-overlay-close">trykk for å lukke</div>
+          </div>
         </div>
       )}
-      <div className={`ane-figure ane-${mood}`}>
-        {!imgErr ? (
-          <img
-            key={mood}
-            src={`${import.meta.env.BASE_URL}${MOOD_IMG[mood]}`}
-            alt={`Ane - ${mood}`}
-            className="ane-img"
-            onError={() => setImgErr(true)}
-          />
-        ) : (
-          <div className="ane-fallback">{MOOD_FALLBACK[mood]}</div>
-        )}
-      </div>
-      <div className="ane-name">Pisken</div>
-    </div>
+    </>
   );
 }
