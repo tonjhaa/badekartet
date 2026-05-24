@@ -113,7 +113,7 @@ body {
   0%, 100% { transform: translateY(0) rotate(-3deg); }
   50% { transform: translateY(-14px) rotate(3deg); }
 }
-.hc-img { width: 120px; height: auto; display: block; mix-blend-mode: multiply; }
+.hc-img { width: 175px; height: auto; display: block; mix-blend-mode: multiply; }
 .nina-img { transform: scaleX(-1); }
 
 /* ---- PROGRESS CARD ---- */
